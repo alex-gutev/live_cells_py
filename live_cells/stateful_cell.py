@@ -49,7 +49,7 @@ class StatefulCell(Cell):
             state.remove_observer(observer)
 
     def __eq__(self, other):
-        if isinstance(other, StatefulCell):
+        if isinstance(other, StatefulCell) and self.key is not None and other.key is not None:
             return self.key == other.key
 
         return NotImplemented
@@ -63,7 +63,7 @@ class StatefulCell(Cell):
         """Retrieve the cell's state, creating it if necessary."""
 
         if self._state is None or self._state.disposed:
-            self._state = GlobalStateMap.instance.get(self.key, self.create)
+            self._state = GlobalStateMap.instance.get(self.key, self.create_state)
 
         return self._state
 
@@ -71,7 +71,7 @@ class StatefulCell(Cell):
         """Retrieve the cell's state if it has been created."""
 
         if self._state is None or self._state.disposed:
-            self._state = GlobalStateMap.maybe_get(self.key)
+            self._state = GlobalStateMap.instance.maybe_get(self.key)
 
         return self._state
 
@@ -135,7 +135,7 @@ class CellState:
     def add_observer(self, observer):
         """Add an observer."""
 
-        assert !self._disposed
+        assert not self._disposed
 
         if not self._observers:
             self.init()
@@ -145,7 +145,7 @@ class CellState:
     def remove_observer(self, observer):
         """Remove an observer."""
 
-        assert !self._disposed
+        assert not self._disposed
 
         if observer in self._observers:
             count = self._observers[observer]
@@ -166,7 +166,7 @@ class CellState:
 
         """
 
-        assert !self._disposed
+        assert not self._disposed
 
         for observer in self._observers:
             try:
@@ -182,7 +182,7 @@ class CellState:
 
         """
 
-        assert !self._disposed
+        assert not self._disposed
 
         for observer in self._observers:
             try:
@@ -194,8 +194,10 @@ class CellState:
 class GlobalStateMap:
     """Mas cell keys to shared cell states."""
 
-    @property
+    _instance = None
+
     @classmethod
+    @property
     def instance(cls):
         """Retrieve the singleton instance."""
 
@@ -205,7 +207,7 @@ class GlobalStateMap:
         return cls._instance
 
     def __init__(self):
-        states = {}
+        self.states = {}
 
     def get(self, key, create):
         """Retrieve the state for the cell identified by `key`, creating it if it exists.
