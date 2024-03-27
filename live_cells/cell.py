@@ -69,6 +69,8 @@ def call_with_tracker(tracker, fn):
 
     """
 
+    global _track_argument
+
     prev = _track_argument
 
     try:
@@ -80,14 +82,29 @@ def call_with_tracker(tracker, fn):
         _track_argument = prev
 
 def with_tracker(tracker):
-    """Install a cell dependency `tracker` to be in effect within the decorated function."""
+    """Install a cell dependency `tracker` to be in effect within the decorated function.
 
-    def wrapper(fn):
-        return call_with_tracker(tracker, fn)
+    `tracker` is the function that is installed as the cell dependency
+    tracker. It is called when the value of a cell is accessed using
+    the function call syntax, within the decorated function, and is
+    passed the same arguments as were passed to the decorated
+    function. The referenced argument cell is provided after the last
+    positional argument, and before the first keyword argument.
 
-    return wrapper
+    """
+
+    def decorator(fn):
+        def wrapper(*args, **kwargs):
+            return call_with_tracker(lambda a: tracker(*args, a, **kwargs), lambda: fn(*args, **kwargs))
+
+        return wrapper
+
+    return decorator
 
 def without_tracker(fn):
     """Ensure that no cell dependency tracker is in effect within the decorated function `fn`."""
 
-    return call_with_tracker(None, fn)
+    def wrapper(*args, **kwargs):
+        return call_with_tracker(None, lambda: fn(*args, **kwargs))
+
+    return wrapper
