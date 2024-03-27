@@ -1,6 +1,7 @@
 from .cell import Cell
 from .constant_cell import ConstantCell, value
 from .mutable_cell import MutableCell, mutable, batch, batched
+from .computed import computed
 
 __all__ = [
     'Cell',
@@ -11,4 +12,6 @@ __all__ = [
     'mutable',
     'batch',
     'batched',
+
+    'computed'
 ]
