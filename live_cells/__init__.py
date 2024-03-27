@@ -1,7 +1,8 @@
 from .cell import Cell
-from .constant_cell import ConstantCell
+from .constant_cell import ConstantCell, value
 
 __all__ = [
     'Cell',
-    'ConstantCell'
+    'ConstantCell',
+    'value'
 ]

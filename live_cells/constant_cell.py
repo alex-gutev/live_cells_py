@@ -30,3 +30,8 @@ class ConstantCell(Cell):
 
     def __hash__(self):
         return hash(self.value)
+
+def value(value):
+    """Create a ConstantCell holding `value`."""
+
+    return ConstantCell(value)
