@@ -9,7 +9,7 @@ class Cell:
     def value(self):
         """Retrieve the value of the cell."""
 
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def __call__(self):
         """Retrieve the value of the cell and track it as a dependency.
@@ -30,7 +30,7 @@ class Cell:
 
         """
 
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def remove_observer(self, observer):
         """Remove an `observer` from the cell.
@@ -44,7 +44,7 @@ class Cell:
 
         """
 
-        raise NotImplementedError()
+        raise NotImplementedError
 
 
 ## Function tracking argument cells

@@ -26,6 +26,6 @@ class PersistentStatefulCell(StatefulCell):
         state = super().state
 
         if state is None:
-            raise InactivePersistentStatefulCellError()
+            raise InactivePersistentStatefulCellError
 
         return state

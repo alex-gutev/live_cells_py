@@ -37,7 +37,7 @@ class StatefulCell(Cell):
     def create_state(self):
         """Create the cell's state."""
 
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def add_observer(self, observer):
         self._ensure_state().add_observer(observer)

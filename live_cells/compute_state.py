@@ -38,7 +38,7 @@ class ComputeCellState(ObserverCellState):
 
         """
 
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @property
     def value(self):
