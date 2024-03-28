@@ -1,4 +1,4 @@
-from live_cells import watch, mutable, Batch
+from live_cells import watch, mutable, batch
 from .util import LifecycleCounter, LifecycleTestCell
 
 class WatchTracker:
@@ -54,7 +54,7 @@ class TestCellWatcher:
         def watch_sum():
             track.add((a(), b()))
 
-        with Batch():
+        with batch():
             a.value = 5
             b.value = 10
 

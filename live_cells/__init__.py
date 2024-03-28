@@ -1,6 +1,6 @@
 from .cell import Cell
 from .constant_cell import ConstantCell, value
-from .mutable_cell import MutableCell, mutable, Batch, batch, batched
+from .mutable_cell import MutableCell, mutable, batch, batched
 from .computed import computed, computed_cell
 from .watch import watch
 
@@ -11,7 +11,6 @@ __all__ = [
 
     'MutableCell',
     'mutable',
-    'Batch',
     'batch',
     'batched',
 

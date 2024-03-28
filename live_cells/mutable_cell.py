@@ -131,12 +131,12 @@ class MutableCellState(CellState):
 
         cls._batched.clear()
 
-class Batch:
-    """Makes a batch update in effect for a given managed scope.
+class BatchGuard:
+    """Batches changes to mutable cells within a given managed scope.
 
     When used with `with`, the observers of the values of mutable
     cells set within the managed scope are only notified of the value
-    change (`update()`) on exiting the scope.
+    changes (`update()`) when exiting the scope.
 
     This has no effect when used when a batch update is already in
     effect before the scope is entered.
@@ -144,7 +144,7 @@ class Batch:
     Example:
 
     ```
-    with Batch():
+    with BatchGuard():
        a.value = 1
        b.value = 2
 
@@ -175,21 +175,29 @@ def mutable(value = None, key = None):
     return MutableCell(value=value, key = key)
 
 
-def batch(fn):
-    """Call `fn` with a batch update in effect.
+def batch():
+    """Batches changes to mutable cells within a given managed scope.
 
-    `fn` is called with no arguments.
+    When used with `with`, the observers of the values of mutable
+    cells set within the managed scope are only notified of the value
+    changes (`update()`) when exiting the scope.
 
-    The observers of the values of the cells set within `fn`, are only
-    notified that the cell values have changed after `fn` returns.
+    This has no effect when used when a batch update is already in
+    effect before the scope is entered.
 
-    If a batch update is already in effect, this function has no
-    effect other than to call `fn`.
+    Example:
+
+    ```
+    with batch():
+       a.value = 1
+       b.value = 2
+
+    # Observers of `a` and `b` are only notified when exiting the `with`.
+    ```
 
     """
 
-    with Batch():
-        fn()
+    return BatchGuard()
 
 def batched(fn):
     """Batch the updates to the cell values within the decorated function.
@@ -197,13 +205,13 @@ def batched(fn):
     This decorator is equivalent to replacing every call to `fn` with
     the following:
 
-    with Batch():
+    with batch():
        fn()
 
     """
 
     def wrapper(*args, **kwargs):
-        with Batch():
+        with batch():
             fn(*args, **kwargs)
 
     return wrapper
