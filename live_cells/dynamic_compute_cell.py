@@ -1,6 +1,6 @@
 from .stateful_cell import StatefulCell
 from .compute_state import ComputeCellState
-from .cell import with_tracker, without_tracker
+from .tracking import without_tracker, ArgumentTracker
 
 class DynamicComputeCell(StatefulCell):
     """A computed cell that determines its arguments at runtime."""
@@ -51,6 +51,6 @@ class DynamicComputeCellState(ComputeCellState):
             arg.add_observer(self)
             self.arguments.add(arg)
 
-    @with_tracker(track_argument)
     def compute(self):
-        return self.cell._compute()
+        with ArgumentTracker(self.track_argument):
+            return self.cell._compute()
