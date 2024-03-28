@@ -131,6 +131,39 @@ class MutableCellState(CellState):
 
         cls._batched.clear()
 
+class Batch:
+    """Makes a batch update in effect for a given managed scope.
+
+    When used with `with`, the observers of the values of mutable
+    cells set within the managed scope are only notified of the value
+    change (`update()`) on exiting the scope.
+
+    This has no effect when used when a batch update is already in
+    effect before the scope is entered.
+
+    Example:
+
+    ```
+    with Batch():
+       a.value = 1
+       b.value = 2
+
+    # Observers of `a` and `b` are only notified when exiting the `with`.
+    ```
+
+    """
+
+    def __enter__(self):
+        self._batching = not MutableCellState._is_batch
+
+        if self._batching:
+            MutableCellState._begin_batch()
+
+    def __exit__(self, exception_type, exception_value, exception_traceback):
+        if self._batching:
+            self._batching = False
+            MutableCellState._end_batch()
+
 
 def mutable(value = None, key = None):
     """Create a mutable cell with an initial `value`.
@@ -140,6 +173,7 @@ def mutable(value = None, key = None):
     """
 
     return MutableCell(value=value, key = key)
+
 
 def batch(fn):
     """Call `fn` with a batch update in effect.
@@ -154,27 +188,22 @@ def batch(fn):
 
     """
 
-    if MutableCellState._is_batch:
+    with Batch():
         fn()
-        return
-
-    MutableCellState._begin_batch()
-
-    try:
-        fn()
-
-    finally:
-        MutableCellState._end_batch()
 
 def batched(fn):
     """Batch the updates to the cell values within the decorated function.
 
     This decorator is equivalent to replacing every call to `fn` with
-    `batch(fn)`.
+    the following:
+
+    with Batch():
+       fn()
 
     """
 
     def wrapper(*args, **kwargs):
-        batch(lambda: fn(*args, **kwargs))
+        with Batch():
+            fn(*args, **kwargs)
 
     return wrapper

@@ -1,4 +1,4 @@
-from live_cells import mutable, batched, computed
+from live_cells import mutable, Batch, batched, computed
 from live_cells.stateful_cell import GlobalStateMap
 
 from .util import CountTestObserver, ValueTestObserver
@@ -117,14 +117,12 @@ def test_batch_update(observers):
         b.value = 2
         op.value = '+'
 
-    @batched
-    def set_cells2():
+    set_cells1()
+
+    with Batch():
         a.value = 5
         b.value = 6
         op.value = 'plus'
-
-    set_cells1()
-    set_cells2()
 
     assert observer.values == ['1 + 2 = 3', '5 plus 6 = 11']
 
