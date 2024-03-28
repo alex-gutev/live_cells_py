@@ -16,3 +16,21 @@ def computed(compute, key = None):
         compute = compute,
         key = key
     )
+
+def computed_cell(key = None):
+    """Define a computed cell with a value computed by the decorated function.
+
+    When this is applied a decorator on a function, the definition is
+    replaced with a dynamic computed cell which computes its value
+    using the decorated function. The dependencies of the cell are
+    automatically discovered, from the cells referenced in the
+    function using the function call syntax.
+
+    The cell is identified by `key` if it is not None.
+
+    """
+
+    def decorator(fn):
+        return computed(fn, key=key)
+
+    return decorator
