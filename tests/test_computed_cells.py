@@ -2,6 +2,7 @@ import pytest
 
 from live_cells import value, mutable, computed, computed_cell
 from .util import (
+    observe,
     CountTestObserver, ValueTestObserver,
     MockException,
     LifecycleCounter, LifecycleTestCell
@@ -18,21 +19,21 @@ class TestDynamicComputedCell:
 
         assert b.value == 2
 
-    def test_recompute_on_argument_change(self, observers):
+    def test_recompute_on_argument_change(self):
         """Test that computed cell is recomputed when argument values change."""
 
         a = mutable(1)
         b = computed(lambda: a() + 1)
 
         observer = ValueTestObserver()
-        observers.add(b, observer)
 
-        a.value = 5
-        a.value = 10
+        with observe(b, observer):
+            a.value = 5
+            a.value = 10
 
-        assert observer.values == [6, 11]
+            assert observer.values == [6, 11]
 
-    def test_recompute_when_all_argument_change(self, observers):
+    def test_recompute_when_all_argument_change(self):
         """Test that the cell is recomputed when all the arguments change."""
 
         a = mutable(1)
@@ -41,15 +42,15 @@ class TestDynamicComputedCell:
         c = computed(lambda: a() + b())
 
         observer = ValueTestObserver()
-        observers.add(c, observer)
 
-        a.value = 5
-        b.value = 8
-        a.value = 100
+        with observe(c, observer):
+            a.value = 5
+            b.value = 8
+            a.value = 100
 
-        assert observer.values == [6, 13, 108]
+            assert observer.values == [6, 13, 108]
 
-    def test_observer_removal(self, observers):
+    def test_observer_removal(self):
         """Test that the observer is not called after it is removed."""
 
         a = mutable(1)
@@ -58,18 +59,17 @@ class TestDynamicComputedCell:
         c = computed(lambda: a() + b())
 
         observer = ValueTestObserver()
-        observers.add(c, observer)
 
-        a.value = 8
-        b.value = 10
+        with observe(c, observer):
+            a.value = 8
+            b.value = 10
 
-        c.remove_observer(observer)
         a.value = 100
         b.value = 1000
 
         assert observer.values == [10, 18]
 
-    def test_all_observers_notified(self, observers):
+    def test_all_observers_notified(self):
         """Test that all observers are notified when value changes."""
 
         a = mutable(1)
@@ -80,17 +80,17 @@ class TestDynamicComputedCell:
         observer1 = ValueTestObserver()
         observer2 = ValueTestObserver()
 
-        observers.add(c, observer1)
-        a.value = 8
+        with observe(c, observer1):
+            a.value = 8
 
-        observers.add(c, observer2)
-        b.value = 10
-        a.value = 100
+            with observe(c, observer2):
+                b.value = 10
+                a.value = 100
 
-        assert observer1.values == [10, 18, 110]
-        assert observer2.values == [18, 110]
+                assert observer1.values == [10, 18, 110]
+                assert observer2.values == [18, 110]
 
-    def test_argument_tracking_in_conditionals(self, observers):
+    def test_argument_tracking_in_conditionals(self):
         """Test that arguments are tracked correctly when appearing in conditionals."""
 
         a = mutable(True)
@@ -100,15 +100,15 @@ class TestDynamicComputedCell:
         d = computed(lambda: b() if a() else c())
 
         observer = ValueTestObserver()
-        observers.add(d, observer)
 
-        b.value = 1
-        a.value = False
-        c.value = 10
+        with observe(d, observer):
+            b.value = 1
+            a.value = False
+            c.value = 10
 
-        assert observer.values == [1, 3, 10]
+            assert observer.values == [1, 3, 10]
 
-    def test_computed_cell_argument(self, observers):
+    def test_computed_cell_argument(self):
         """Test that computed cell argument is tracked correctly."""
 
         a = mutable(True)
@@ -120,16 +120,16 @@ class TestDynamicComputedCell:
         f = computed(lambda: d() + e())
 
         observer = ValueTestObserver()
-        observers.add(f, observer)
 
-        b.value = 1
-        e.value = 10
-        a.value = False
-        c.value = 10
+        with observe(f, observer):
+            b.value = 1
+            e.value = 10
+            a.value = False
+            c.value = 10
 
-        assert observer.values == [1, 11, 13, 20]
+            assert observer.values == [1, 11, 13, 20]
 
-    def test_exception_on_init(self, observers):
+    def test_exception_on_init(self):
         """Test that exceptions in initial value are reproduced on access.
 
         This also tests the `computed_cell` decorator.
@@ -143,17 +143,16 @@ class TestDynamicComputedCell:
         with pytest.raises(MockException):
             cell.value
 
-    def test_exception_while_observed(self, observers):
+    def test_exception_while_observed(self):
         """Test that exceptions are reproduced while being observed."""
 
         @computed_cell()
         def cell():
             raise MockException
 
-        observers.observe(cell)
-
-        with pytest.raises(MockException):
-            cell.value
+        with observe(cell):
+            with pytest.raises(MockException):
+                cell.value
 
     def test_compares_equal(self):
         """Test that two cells with the same keys compare equal."""
@@ -242,7 +241,7 @@ class TestDynamicComputedCell:
         assert c1 != c2
         assert c1 == c1
 
-    def test_shared_state(self, observers):
+    def test_shared_state(self):
         """Test that cells with the same keys manage the same observers."""
 
         counter = LifecycleCounter()
@@ -254,17 +253,17 @@ class TestDynamicComputedCell:
         assert counter.count_init == 0
 
         observer = CountTestObserver()
-        observers.add(f(), observer)
 
-        assert counter.count_init == 1
-        assert counter.count_dispose == 0
+        with observe(f(), observer):
+            assert counter.count_init == 1
+            assert counter.count_dispose == 0
 
-        f().remove_observer(observer)
+            f().remove_observer(observer)
 
-        assert counter.count_init == 1
-        assert counter.count_dispose == 1
+            assert counter.count_init == 1
+            assert counter.count_dispose == 1
 
-    def test_state_recreated(self, observers):
+    def test_state_recreated(self):
         """Test that the cell's state is recreated after it is destroyed."""
 
         counter = LifecycleCounter()
@@ -274,11 +273,10 @@ class TestDynamicComputedCell:
             return computed(lambda: a() + 1, key='theKey')
 
         observer = CountTestObserver()
-        observers.add(f(), observer)
 
-        f().remove_observer(observer)
+        with observe(f(), observer):
+            f().remove_observer(observer)
 
-        observers.observe(f())
-
-        assert counter.count_init == 2
-        assert counter.count_dispose == 1
+        with observe(f()):
+            assert counter.count_init == 2
+            assert counter.count_dispose == 1
