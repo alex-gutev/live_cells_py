@@ -8,7 +8,7 @@ class ComputeCell(DependentCell):
     """
 
     def __init__(self, compute, arguments, key=None):
-        """Create a computed cell a given `compute` function and `arguments`.
+        """Create a computed cell with a given `compute` function and `arguments`.
 
         When the value of this cell is accessed `compute` is called
         with no arguments. It should return the cell's value.
