@@ -36,12 +36,11 @@ class ObserverCellState(CellState):
         self.stale = True
         self.updating = False
 
+        self._changed_dependencies = 0
+        self._did_change = False
+
     def did_change(self):
-        """Did the cell's value actually change during this update cycle?
-
-        Currently not used.
-
-        """
+        """Did the cell's value actually change during this update cycle?"""
 
         return True
 
@@ -67,7 +66,7 @@ class ObserverCellState(CellState):
 
         self.notify_will_update()
 
-    def on_update(self):
+    def on_update(self, did_change):
         """Called after `update()` is called.
 
         The base implementation calls `update()` on the observers of
@@ -77,22 +76,37 @@ class ObserverCellState(CellState):
 
         """
 
-        self.notify_update()
+        self.notify_update(did_change=did_change)
 
     # Cell Observer Methods
 
     def will_update(self, arg):
         if not self.updating:
+            assert self._changed_dependencies == 0
+
             self.pre_update()
 
             self.updating = True
+            self._did_change = False
+            self._changed_dependencies = 0
 
             self.on_will_update()
             self.stale = True
 
-    def update(self, arg):
-        if self.updating:
-            self.on_update()
+        self._changed_dependencies += 1
 
-            self.updating = False
-            self.post_update()
+    def update(self, arg, did_change):
+        if self.updating:
+            assert self._changed_dependencies > 0
+
+            self._changed_dependencies -= 1
+            self._did_change = self._did_change or did_change
+
+            if self._changed_dependencies == 0:
+                self.stale = self.stale or self._did_change
+                self.on_update(self._did_change and self.did_change())
+
+                self.updating = False
+
+                if self._did_change:
+                    self.post_update()

@@ -47,6 +47,8 @@ class CellWatchObserver:
         self.arguments = set()
         self.updating = False
 
+        self.waiting_for_change = False
+
         self.call_watch()
 
     def stop(self):
@@ -82,13 +84,16 @@ class CellWatchObserver:
     def will_update(self, cell):
         if not self.updating:
             self.updating = True
+            self.waiting_for_change = False
 
-    def update(self, cell):
-        if self.updating:
+    def update(self, cell, did_change):
+        if self.updating or (did_change and self.waiting_for_change):
             self.updating = False
+            self.waiting_for_change = not did_change
 
-            # TODO: Schedule after current update cycle
-            self.call_watch()
+            if did_change:
+                # TODO: Schedule after current update cycle
+                self.call_watch()
 
 def watch(callback):
     """Register `callback` as a cell watch function.

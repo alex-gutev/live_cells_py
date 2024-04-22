@@ -101,6 +101,8 @@ class CellState:
         self._observers = {}
         self._disposed = False
 
+        self._notify_count = 0
+
     @property
     def disposed(self):
         """Has this state been disposed?
@@ -168,6 +170,10 @@ class CellState:
 
         assert not self._disposed
 
+        self._notify_count += 1
+        assert self._notify_count > 0
+
+        # TODO: Make copy of observers
         for observer in self._observers:
             try:
                 observer.will_update(self.cell)
@@ -175,18 +181,26 @@ class CellState:
             except: # TODO: Print log
                 pass
 
-    def notify_update(self):
+    def notify_update(self, *, did_change=True):
         """Notify the observers that the cell's value has changed.
 
         This method calls `update` on each observer.
+
+        A value of False for `did_change` indicates that the cell's
+        value has not changed. A value of True indicates that it may
+        have changed.
 
         """
 
         assert not self._disposed
 
+        self._notify_count -= 1
+        assert self._notify_count >= 0
+
+        # TODO: Make copy of observers
         for observer in self._observers:
             try:
-                observer.update(self.cell)
+                observer.update(self.cell, did_change)
 
             except: # TODO: Print log
                 pass

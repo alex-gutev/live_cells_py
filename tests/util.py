@@ -16,7 +16,7 @@ class CountTestObserver:
         self.count_will_update = 0
         self.count_update = 0
 
-    def update(self, cell):
+    def update(self, cell, did_change):
         self.count_update += 1
 
     def will_update(self, cell):
@@ -35,18 +35,40 @@ class ValueTestObserver:
     def __init__(self):
         self.values = []
 
+        self._updating = False
+        self._notify_count = 0
+        self._did_change = False
+
     def will_update(self, cell):
-        pass
+        if not self._updating:
+            assert self._notify_count == 0
 
-    def update(self, cell):
-        try:
-            value = cell.value
+            self._updating = True
+            self._notify_count = 0
+            self._did_change = False
 
-            if not self.values or self.values[-1] != value:
-                self.values.append(value)
+        self._notify_count += 1
 
-        except:
-            pass
+    def update(self, cell, did_change):
+        if self._updating:
+            assert self._notify_count > 0
+
+            self._did_change = self._did_change or did_change
+
+            self._notify_count -= 1
+
+            if self._notify_count == 0:
+                self._updating = False
+
+                if self._did_change:
+                    try:
+                        value = cell.value
+
+                        if not self.values or self.values[-1] != value:
+                            self.values.append(value)
+
+                    except:
+                        pass
 
 class Observer:
     """Installs a cell observer for a managed scope created with `with`."""

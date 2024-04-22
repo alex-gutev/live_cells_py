@@ -64,8 +64,8 @@ class ObserverWrapper:
         self.cell = cell
         self.observer = observer
 
-    def update(self, arg):
-        self.observer.update(self.cell)
+    def update(self, arg, did_change):
+        self.observer.update(self.cell, did_change)
 
     def will_update(self, arg):
         self.observer.will_update(self.cell)
