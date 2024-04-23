@@ -15,7 +15,7 @@ class StatefulCell(Cell):
     def __init__(self, key=None):
         """Create a StatefulCell identified by `key`.
 
-        If `key` is None, it does not share its stat with any other
+        If `key` is None, it does not share its state with any other
         cell.
 
         """
@@ -137,7 +137,7 @@ class CellState:
     def add_observer(self, observer):
         """Add an observer."""
 
-        assert not self._disposed
+        assert not self._disposed, 'CellState used after disposal.'
 
         if not self._observers:
             self.init()
@@ -147,7 +147,7 @@ class CellState:
     def remove_observer(self, observer):
         """Remove an observer."""
 
-        assert not self._disposed
+        assert not self._disposed, 'CellState used after disposal.'
 
         if observer in self._observers:
             count = self._observers[observer]
@@ -168,10 +168,13 @@ class CellState:
 
         """
 
-        assert not self._disposed
+        assert not self._disposed, 'CellState used after disposal.'
 
         self._notify_count += 1
-        assert self._notify_count > 0
+        assert self._notify_count > 0, r'''Notify count is less than or equal to zero at the start of the update cycle.
+
+        This indicates a bug in live_cells unless the error originates
+        from a cell class provided by third-party code.'''
 
         # TODO: Make copy of observers
         for observer in self._observers:
@@ -192,7 +195,11 @@ class CellState:
 
         """
 
-        assert not self._disposed
+        assert not self._disposed, r'''Notify count is less than zero when calling CellState.notify_update().
+
+        This indicates a bug in live_cells unless the error originates
+        from a cell class provided by third-party code.'''
+
 
         self._notify_count -= 1
         assert self._notify_count >= 0
