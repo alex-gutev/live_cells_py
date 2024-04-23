@@ -82,7 +82,7 @@ class ObserverCellState(CellState):
 
     def will_update(self, arg):
         if not self.updating:
-            assert self._changed_dependencies == 0, r'''Number of changed dependencies not equal to zero at start of update cycle.
+            assert self._changed_dependencies == 0, '''Number of changed dependencies not equal to zero at start of update cycle.
 
             This indicates that a bug in live_cells unless the error
             originates from a cell class provided by third party
@@ -101,7 +101,7 @@ class ObserverCellState(CellState):
 
     def update(self, arg, did_change):
         if self.updating:
-            assert self._changed_dependencies > 0, r'''More calls to .update() than .will_update()
+            assert self._changed_dependencies > 0, '''More calls to .update() than .will_update()
 
             This indicates that a bug in live_cells unless the error
             originates from a cell class provided by third party

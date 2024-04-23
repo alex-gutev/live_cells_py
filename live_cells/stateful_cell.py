@@ -171,7 +171,7 @@ class CellState:
         assert not self._disposed, 'CellState used after disposal.'
 
         self._notify_count += 1
-        assert self._notify_count > 0, r'''Notify count is less than or equal to zero at the start of the update cycle.
+        assert self._notify_count > 0, '''Notify count is less than or equal to zero at the start of the update cycle.
 
         This indicates a bug in live_cells unless the error originates
         from a cell class provided by third-party code.'''
@@ -195,7 +195,7 @@ class CellState:
 
         """
 
-        assert not self._disposed, r'''Notify count is less than zero when calling CellState.notify_update().
+        assert not self._disposed, '''Notify count is less than zero when calling CellState.notify_update().
 
         This indicates a bug in live_cells unless the error originates
         from a cell class provided by third-party code.'''
