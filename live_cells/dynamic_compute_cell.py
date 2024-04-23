@@ -2,10 +2,12 @@ from .stateful_cell import StatefulCell
 from .compute_state import ComputeCellState
 from .tracking import without_tracker, ArgumentTracker
 
+from .changes_only_state import ChangesOnlyState
+
 class DynamicComputeCell(StatefulCell):
     """A computed cell that determines its arguments at runtime."""
 
-    def __init__(self, compute, key=None):
+    def __init__(self, compute, key=None, changes_only=False):
         """Create a computed cell with a given `compute` function.
 
         `compute` is a function of no arguments that is called to
@@ -15,11 +17,15 @@ class DynamicComputeCell(StatefulCell):
 
         The cell is identified by `key` if it is not None.
 
+        If `changes_only` is True, the cell only notifies its
+        observers if its value has actually changed.
+
         """
 
         super().__init__(key=key)
 
         self._compute = compute
+        self._changes_only = changes_only
 
     @property
     @without_tracker
@@ -32,6 +38,9 @@ class DynamicComputeCell(StatefulCell):
         return state.value
 
     def create_state(self):
+        if self._changes_only:
+            return DynamicComputeChangesOnlyCellState(self, self.key)
+
         return DynamicComputeCellState(self, self.key)
 
 class DynamicComputeCellState(ComputeCellState):
@@ -54,3 +63,13 @@ class DynamicComputeCellState(ComputeCellState):
     def compute(self):
         with ArgumentTracker(self.track_argument):
             return self.cell._compute()
+
+class DynamicComputeChangesOnlyCellState(DynamicComputeCellState, ChangesOnlyState):
+    """A DynamicComputeCellState that checks whether the cell value has changed.
+
+    This state only notifies the observers of the cell, if the new
+    value of the cell is not equal to the previous value.
+
+    """
+
+    pass
