@@ -1,4 +1,5 @@
 from .observer_state import ObserverCellState
+from .exceptions import StopComputeException
 
 class ComputeCellState(ObserverCellState):
     """Provides a cell state that computes a value as function of one or more argument cells.
@@ -50,7 +51,12 @@ class ComputeCellState(ObserverCellState):
         """
 
         if self.stale:
-            self._value = self.compute()
+            try:
+                self._value = self.compute()
+
+            except StopComputeException as e:
+                if not self._has_value:
+                    self._value = e.default_value
 
             self.stale = False
             self._has_value = True

@@ -1,6 +1,7 @@
 from .stateful_cell import StatefulCell
 from .compute_state import ComputeCellState
 from .tracking import without_tracker, ArgumentTracker
+from .exceptions import StopComputeException
 
 from .changes_only_state import ChangesOnlyState
 
@@ -33,7 +34,11 @@ class DynamicComputeCell(StatefulCell):
         state = self.state
 
         if state is None:
-            return self._compute()
+            try:
+                return self._compute()
+
+            except StopComputeException as e:
+                return e.default_value
 
         return state.value
 

@@ -1,7 +1,7 @@
 from .cell import Cell
 from .constant_cell import ConstantCell, value
 from .mutable_cell import MutableCell, mutable, batch, batched
-from .computed import computed, computed_cell
+from .computed import computed, computed_cell, none
 from .watch import watch
 
 __all__ = [
@@ -16,6 +16,9 @@ __all__ = [
 
     'computed',
     'computed_cell',
+    'none',
 
-    'watch'
+    'watch',
+
+    'StopComputeException'
 ]

@@ -1,4 +1,5 @@
 from .tracking import ArgumentTracker
+from .exceptions import StopComputeException
 
 class CellWatcher:
     """Maintains the state of a cell watch function."""
@@ -73,6 +74,11 @@ class CellWatchObserver:
         try:
             with ArgumentTracker(self.track_argument):
                 self.callback()
+
+        except StopComputeException:
+            # Stop execution of watch function
+
+            pass
 
         except:
             # TODO: Print to log
