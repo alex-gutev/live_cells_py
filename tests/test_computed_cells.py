@@ -1,6 +1,6 @@
 import pytest
 
-from live_cells import value, mutable, computed, computed_cell
+from live_cells import value, mutable, computed, computed_cell, none
 from .util import (
     observe,
     CountTestObserver, ValueTestObserver,
@@ -107,6 +107,57 @@ class TestDynamicComputedCell:
             c.value = 10
 
             assert observer.values == [1, 3, 10]
+
+    def test_none_preserves_previous_value(self):
+        """Test that the previous value is preserved when none() is used."""
+
+        a = mutable(0)
+        evens = computed(lambda: a() if a() % 2 == 0 else none())
+
+        observer = ValueTestObserver()
+
+        with observe(evens, observer):
+            a.value = 1
+            a.value = 2
+            a.value = 3
+            a.value = 4
+            a.value = 5
+
+        assert observer.values == [0, 2, 4]
+
+    def test_cell_initialized_to_none_default_value(self):
+        """Test that the value of the cell is initialized to the default value given in none()."""
+
+        a = mutable(1)
+        evens = computed(lambda: a() if a() % 2 == 0 else none(0))
+
+        observer = ValueTestObserver()
+
+        with observe(evens, observer):
+            a.value = 3
+            a.value = 4
+            a.value = 5
+            a.value = 6
+
+        assert observer.values == [0, 4, 6]
+
+    def test_cell_initialize_to_none_when_no_default_value(self):
+        """Test that the value of the cell is initialized to None when no default value given in none()."""
+
+        a = mutable(1)
+        evens = computed(lambda: a() if a() % 2 == 0 else none())
+
+        observer = ValueTestObserver()
+
+        with observe(evens, observer):
+            a.value = 3
+            a.value = 4
+            a.value = 5
+            a.value = 6
+
+        assert observer.values == [None, 4, 6]
+
+
 
     def test_computed_cell_argument(self):
         """Test that computed cell argument is tracked correctly."""
