@@ -8,13 +8,18 @@ class ChangesOnlyState:
 
     """
 
-    def __init__(self):
+    def __init__(self, cell, key=None):
+        super().__init__(
+            cell = cell,
+            key = key
+        )
+
         self._has_value = False
         self._old_value = None
 
     def did_change(self):
         try:
-            return  not self._has_value or self.cell.value != self._old_value
+            return not self._has_value or self.cell.value != self._old_value
 
         except:
             return True

@@ -69,7 +69,7 @@ class DynamicComputeCellState(ComputeCellState):
         with ArgumentTracker(self.track_argument):
             return self.cell._compute()
 
-class DynamicComputeChangesOnlyCellState(DynamicComputeCellState, ChangesOnlyState):
+class DynamicComputeChangesOnlyCellState(ChangesOnlyState, DynamicComputeCellState):
     """A DynamicComputeCellState that checks whether the cell value has changed.
 
     This state only notifies the observers of the cell, if the new

@@ -1,7 +1,7 @@
 from .dynamic_compute_cell import DynamicComputeCell
 from .exceptions import StopComputeException
 
-def computed(compute, key = None):
+def computed(compute, key = None, changes_only = False):
     """Create a computed cell with dynamically determined arguments.
 
     A computed cell with compute function `compute` is
@@ -12,13 +12,18 @@ def computed(compute, key = None):
 
     The cell is identified by `key` if it is not None.
 
+    If `changes_only` is True, the cell only notifies its observers if
+    its value has actually changed.
+
     """
+
     return DynamicComputeCell(
         compute = compute,
-        key = key
+        key = key,
+        changes_only = changes_only
     )
 
-def computed_cell(key = None):
+def computed_cell(key = None, changes_only = False):
     """Define a computed cell with a value computed by the decorated function.
 
     When this is applied a decorator on a function, the definition is
@@ -29,10 +34,13 @@ def computed_cell(key = None):
 
     The cell is identified by `key` if it is not None.
 
+    If `changes_only` is True, the cell only notifies its observers if
+    its value has actually changed.
+
     """
 
     def decorator(fn):
-        return computed(fn, key=key)
+        return computed(fn, key=key, changes_only=changes_only)
 
     return decorator
 
