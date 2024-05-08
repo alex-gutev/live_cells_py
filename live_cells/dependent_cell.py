@@ -72,7 +72,7 @@ class ObserverWrapper:
 
     def __eq__(self, other):
         if isinstance(other, ObserverWrapper):
-            return self.observer == other.observer && self.cell == other.cell
+            return self.observer == other.observer and self.cell == other.cell
 
         return NotImplemented
 
