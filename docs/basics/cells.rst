@@ -250,6 +250,6 @@ As a result the following is printed:
    a = 0, b = 1
    a = 15, b = 3
 
-#. ``a = 0, b = 1`` is called when the watch function is first defined.
-#. ``a = 15, b = 3`` is called when exiting the context managed by
+#. ``a = 0, b = 1`` is printed when the watch function is first defined.
+#. ``a = 15, b = 3`` is printed when exiting the context managed by
    :any:`live_cells.batch`.
