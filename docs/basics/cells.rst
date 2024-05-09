@@ -212,6 +212,34 @@ In this example:
    the value of ``sum`` being recomputed and the watch function being
    called.
 
+.. tip::
+
+   A computed cell with more than one expression can be defined by
+   using :any:`live_cells.computed` as a decorator:
+
+
+   .. code-block:: python
+
+      import live_cells as lc
+
+      n = lc.mutable(2)
+
+      @lc.computed()
+      def factorial_n():
+          result = 1
+
+	  while n() > 1:
+	    result *= n
+	    n -= 1
+	  
+	  return result
+
+      lc.watch(lambda: print(f'n! = {factorial_n()}'))
+
+   The computed cell is defined with the decorated function as the
+   compute function. The cell can then be referenced using the name of
+   the decorated function.
+
 =============
 Batch Updates
 =============
