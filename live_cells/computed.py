@@ -1,7 +1,7 @@
 from .dynamic_compute_cell import DynamicComputeCell
 from .exceptions import StopComputeException
 
-def computed(compute, key = None, changes_only = False):
+def computed(compute=None, key = None, changes_only = False):
     """Create a computed cell with dynamically determined arguments.
 
     A computed cell with compute function `compute` is
@@ -15,34 +15,24 @@ def computed(compute, key = None, changes_only = False):
     If `changes_only` is True, the cell only notifies its observers if
     its value has actually changed.
 
+    This function may be used as a decorator by omitting the `compute`
+    argument, in which case the decorated function is used as the
+    compute function. The cell can then be referenced using the name
+    of the decorated function.
+
     """
+
+    if compute is None:
+        def decorator(fn):
+            return computed(fn, key, changes_only)
+
+        return decorator
 
     return DynamicComputeCell(
         compute = compute,
         key = key,
         changes_only = changes_only
     )
-
-def computed_cell(key = None, changes_only = False):
-    """Define a computed cell with a value computed by the decorated function.
-
-    When this is applied a decorator on a function, the definition is
-    replaced with a dynamic computed cell which computes its value
-    using the decorated function. The dependencies of the cell are
-    automatically discovered, from the cells referenced in the
-    function using the function call syntax.
-
-    The cell is identified by `key` if it is not None.
-
-    If `changes_only` is True, the cell only notifies its observers if
-    its value has actually changed.
-
-    """
-
-    def decorator(fn):
-        return computed(fn, key=key, changes_only=changes_only)
-
-    return decorator
 
 def none(default_value=None):
     """Stop the computation of the current cell's value.
