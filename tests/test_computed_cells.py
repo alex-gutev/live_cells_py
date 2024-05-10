@@ -187,7 +187,7 @@ class TestDynamicComputedCell:
 
         """
 
-        @computed()
+        @computed
         def cell():
             raise MockException
 
@@ -197,7 +197,7 @@ class TestDynamicComputedCell:
     def test_exception_while_observed(self):
         """Test that exceptions are reproduced while being observed."""
 
-        @computed()
+        @computed
         def cell():
             raise MockException
 
@@ -242,7 +242,7 @@ class TestDynamicComputedCell:
         assert c1 == c1
 
     def test_compares_equal_decorator(self):
-        """Test that two cells with the same keys, defined with @computed(), compare equal."""
+        """Test that two cells with the same keys, defined with @computed, compare equal."""
 
         a = mutable(0)
         b = mutable(0)
@@ -259,7 +259,7 @@ class TestDynamicComputedCell:
         assert hash(c1) == hash(c2)
 
     def test_compares_not_equal_decorator(self):
-        """Test that two cells with different keys, defined with @computed(), compare not equal."""
+        """Test that two cells with different keys, defined with @computed, compare not equal."""
 
         a = mutable(0)
         b = mutable(0)
@@ -276,16 +276,16 @@ class TestDynamicComputedCell:
         assert c1 == c1
 
     def test_compares_not_equal_none_keys_decorator(self):
-        """Test that two cells with None keys, defined with @computed(), compare not equal."""
+        """Test that two cells with None keys, defined with @computed, compare not equal."""
 
         a = mutable(0)
         b = mutable(0)
 
-        @computed()
+        @computed
         def c1():
             return a() + b()
 
-        @computed()
+        @computed
         def c2():
             return a() + b()
 
