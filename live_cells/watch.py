@@ -149,4 +149,6 @@ def watch(callback=None, schedule=None):
         def decorator(fn):
             return watch(fn, schedule)
 
+        return decorator
+
     return CellWatcher(callback, schedule)
