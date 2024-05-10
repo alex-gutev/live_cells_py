@@ -4,7 +4,7 @@ from .exceptions import StopComputeException
 class CellWatcher:
     """Maintains the state of a cell watch function."""
 
-    def __init__(self, callback):
+    def __init__(self, callback, schedule=None):
         """Create and start a cell watch function.
 
         `callback` is called once immediately, with no arguments, to
@@ -13,9 +13,15 @@ class CellWatcher:
         Afterwards `callback` is called whenever at least one of the
         cells referenced within it change, until `stop()` is called.
 
+        `schedule` is an optional function which is called with the
+        callback function provided as an argument. When `schedule` is
+        called, it should schedule the callback function provided to
+        it to be called.
+
         """
+
         self.callback = callback
-        self.observer = CellWatchObserver(callback)
+        self.observer = CellWatchObserver(callback, schedule=schedule)
 
     def stop(self):
         """Stop the watch function from being called for future updates.
@@ -40,10 +46,18 @@ class CellWatcher:
 class CellWatchObserver:
     """Watch function cell observer."""
 
-    def __init__(self, callback):
-        """Create a watch function observer for watch function `callback`."""
+    def __init__(self, callback, schedule=None):
+        """Create a watch function observer for watch function `callback`.
+
+        `schedule` is an optional function which is called with the
+        callback function provided as an argument. When `schedule` is
+        called, it should schedule the callback function provided to
+        it to be called.
+
+        """
 
         self.callback = callback
+        self.schedule = schedule
 
         self.arguments = set()
         self.updating = False
@@ -69,6 +83,14 @@ class CellWatchObserver:
             self.arguments.add(arg)
 
     def call_watch(self):
+        """Call the watch function scheduling it if necessary."""
+
+        if self.schedule:
+            self.schedule(self.call_callback)
+
+        self.call_callback()
+
+    def call_callback(self):
         """Call the watch function."""
 
         try:
@@ -101,7 +123,7 @@ class CellWatchObserver:
                 # TODO: Schedule after current update cycle
                 self.call_watch()
 
-def watch(callback):
+def watch(callback=None, schedule=None):
     """Register `callback` as a cell watch function.
 
     `callback` (A function of no arguments) is called once immediately
@@ -113,8 +135,18 @@ def watch(callback):
     cell values, call the `.stop()` method on the object returned by
     this function.
 
+    `schedule` is an optional function which is called with the
+    callback function provided as an argument. When `schedule` is
+    called, it should schedule the callback function provided to it to
+    be called.
+
+
     This function may be used as a decorator.
 
     """
 
-    return CellWatcher(callback)
+    if callback is None:
+        def decorator(fn):
+            return watch(fn, schedule)
+
+    return CellWatcher(callback, schedule)
