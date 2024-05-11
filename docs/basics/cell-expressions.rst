@@ -58,7 +58,7 @@ to be handled using ``try`` and ``except`` inside computed cells.
    text = lc.mutable('0')
    n = lc.computed(lambda: int(text()))
 
-   @lc.computed()
+   @lc.computed
    def is_valid():
        try:
            return n() > 0

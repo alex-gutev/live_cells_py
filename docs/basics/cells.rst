@@ -224,7 +224,7 @@ In this example:
 
       n = lc.mutable(2)
 
-      @lc.computed()
+      @lc.computed
       def factorial_n():
           result = 1
 
