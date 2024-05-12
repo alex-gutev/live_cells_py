@@ -18,6 +18,66 @@ class Wrapper:
 class TestNumericExtension:
     """Tests numeric operators applied on cells."""
 
+    def test_lt(self):
+        a = value(3)
+        b = mutable(8)
+
+        c1 = a < b
+        c2 = b < a
+
+        assert c1.value
+        assert not c2.value
+
+        b.value = 1
+
+        assert not c1.value
+        assert c2.value
+
+    def test_le(self):
+        a = value(3)
+        b = mutable(8)
+
+        c1 = a <= b
+        c2 = b <= a
+
+        assert c1.value
+        assert not c2.value
+
+        b.value = 3
+
+        assert c1.value
+        assert c2.value
+
+    def test_gt(self):
+        a = value(3)
+        b = mutable(8)
+
+        c1 = a > b
+        c2 = b > a
+
+        assert not c1.value
+        assert c2.value
+
+        b.value = 1
+
+        assert c1.value
+        assert not c2.value
+
+    def test_ge(self):
+        a = value(3)
+        b = mutable(8)
+
+        c1 = a >= b
+        c2 = b >= a
+
+        assert not c1.value
+        assert c2.value
+
+        b.value = 3
+
+        assert c1.value
+        assert c2.value
+
     def test_add(self):
         a = value(5)
         b = mutable(6)

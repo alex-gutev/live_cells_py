@@ -1,4 +1,5 @@
 import math
+import functools
 import operator as op
 
 from .cell import Cell
@@ -17,12 +18,55 @@ def cell_function(compute=None):
 
     if compute is None:
         def decorator(fn):
-            return compute_cell(fn)
+            return cell_function(fn)
 
+        return decorator
+
+    @functools.wraps(compute)
     def wrapper(*args):
         return ComputeCell(lambda: compute(*(arg.value for arg in args)), set(args))
 
     return wrapper
+
+def cell_extension(fn = None, name=None):
+    """Add `fn` as a method to all cell objects.
+
+    `fn` is added as a method to the Cell class under the given `name`
+    or the name of `fn` if `name` is None.
+
+    This function may be used as a decorator.
+
+    """
+
+    if fn is None:
+        def decorator(fn):
+            return cell_extension(fn, name)
+
+        return decorator
+
+    setattr(Cell, name if name is not None else fn.__name__, fn)
+
+    return fn
+
+@cell_extension
+@cell_function
+def __lt__(a, b):
+    return op.lt(a, b)
+
+@cell_extension
+@cell_function
+def __le__(a, b):
+    return op.le(a, b)
+
+@cell_extension
+@cell_function
+def __gt__(a, b):
+    return op.gt(a, b)
+
+@cell_extension
+@cell_function
+def __ge__(a, b):
+    return op.ge(a, b)
 
 @cell_function
 def add(a, b):
