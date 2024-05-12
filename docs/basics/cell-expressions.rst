@@ -5,6 +5,62 @@ This library provides a number of tools for building expressions of
 cells without requiring a computed cell to be created explicitly with
 :any:`live_cells.computed`.
 
+==========     
+Arithmetic
+==========
+
+The following arithmetic and relational operators/functions can be
+applied directly on cells: ``<``, ``<=``, ``>``, ``>=``, ``+``, ``-``,
+unary ``-``, unary ``+``, ``*``, ``@``, ``/``, ``//``, ``%``,
+``divmod``, ``**``, ``<<``, ``>>``, ``&``, ``|``, ``^``, ``~``,
+``abs``, ``round``, ``math.trunc``, ``math.floor``, ``math.ceil``.
+
+Each operator returns a cell that applies the operator on the values
+of the operand cells. This allows a computed cell to be defined
+directly as an expression of cells. For example the following defines
+a cell that computes the sum of two cells directly using the ``+``
+operator:
+
+.. code-block:: python
+
+   import live_cells as lc
+
+   a = lc.mutable(1)
+   b = lc.mutable(2)
+
+   c = a + b
+
+   print(c.value) # Prints 3
+
+
+.. note::
+
+   This definition of the cell ``c`` is not only simpler than the
+   equivalent definition using :any:`live_cells.computed` but is also
+   more efficient since the argument cells are known ahead of time.
+
+``c`` is a cell like any other cell. It can be observed by a watch
+function or it can appear as an argument in a computed cell.
+
+.. code-block:: python
+
+   lc.watch(lambda: print(c()))
+
+   a.value = 5 # Prints 7
+   b.value = 4 # Prints 9
+
+Expressions of cells can be arbitrarily complex:
+
+.. code-block:: python
+
+   x = a * b + c / d
+   y = x < e
+
+.. hint::
+
+   To include a constant value in a cell expression, convert it to a
+   cell using :any:`live_cells.value`
+
 ======================
 Aborting a computation
 ======================
