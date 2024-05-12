@@ -68,113 +68,112 @@ def __gt__(a, b):
 def __ge__(a, b):
     return op.ge(a, b)
 
+@cell_extension
 @cell_function
-def add(a, b):
+def __add__(a, b):
     return op.add(a, b)
 
+@cell_extension
 @cell_function
-def sub(a, b):
+def __sub__(a, b):
     return op.sub(a, b)
 
+@cell_extension
 @cell_function
-def mul(a, b):
+def __mul__(a, b):
     return op.mul(a, b)
 
+@cell_extension
 @cell_function
-def matmul(a, b):
+def __matmul__(a, b):
     return op.matmul(a, b)
 
+@cell_extension
 @cell_function
-def truediv(a, b):
+def __truediv__(a, b):
     return op.truediv(a, b)
 
+@cell_extension
 @cell_function
-def floordiv(a, b):
+def __floordiv__(a, b):
     return op.floordiv(a, b)
 
+@cell_extension
 @cell_function
-def mod(a, b):
+def __mod__(a, b):
     return op.mod(a, b)
 
+@cell_extension
 @cell_function
-def cell_divmod(a, b):
+def __divmod__(a, b):
     return divmod(a, b)
 
+@cell_extension
 @cell_function
-def cell_pow(a, n):
+def __pow__(a, n):
     return op.pow(a, n)
 
+@cell_extension
 @cell_function
-def lshift(a, n):
+def __lshift__(a, n):
     return op.lshift(a, n)
 
+@cell_extension
 @cell_function
-def rshift(a, n):
+def __rshift__(a, n):
     return op.rshift(a, n)
 
+@cell_extension
 @cell_function
-def cell_and(a, b):
+def __and__(a, b):
     return op.and_(a, b)
 
+@cell_extension
 @cell_function
-def cell_xor(a, b):
+def __xor__(a, b):
     return op.xor(a,b)
 
+@cell_extension
 @cell_function
-def cell_or(a, b):
+def __or__(a, b):
     return op.or_(a, b)
 
+@cell_extension
 @cell_function
-def neg(a):
+def __neg__(a):
     return op.neg(a)
 
+@cell_extension
 @cell_function
-def pos(a):
+def __pos__(a):
     return op.pos(a)
 
+@cell_extension
 @cell_function
-def cell_abs(a):
+def __abs__(a):
     return abs(a)
 
+@cell_extension
 @cell_function
-def invert(a):
+def __invert__(a):
     return op.invert(a)
 
+@cell_extension
 @cell_function
-def cell_round(a, ndigits=None):
+def __round__(a, ndigits=None):
     return round(a, ndigits)
 
+@cell_extension
 @cell_function
-def cell_trunc(a):
+def __trunc__(a):
     return math.trunc(a)
 
+@cell_extension
 @cell_function
-def cell_floor(a):
+def __floor__(a):
     return math.floor(a)
 
+@cell_extension
 @cell_function
-def cell_ceil(a):
+def __ceil__(a):
     return math.ceil(a)
-
-Cell.__add__ = add
-Cell.__sub__ = sub
-Cell.__mul__ = mul
-Cell.__matmul__ = matmul
-Cell.__truediv__ = truediv
-Cell.__floordiv__ = floordiv
-Cell.__mod__ = mod
-Cell.__divmod__ = cell_divmod
-Cell.__pow__ = cell_pow
-Cell.__lshift__ = lshift
-Cell.__rshift__ = rshift
-Cell.__and__ = cell_and
-Cell.__xor__ = cell_xor
-Cell.__or__ = cell_or
-Cell.__neg__ = neg
-Cell.__pos__ = pos
-Cell.__abs__ = cell_abs
-Cell.__invert__ = invert
-Cell.__round__ = cell_round
-Cell.__trunc__ = cell_trunc
-Cell.__floor__ = cell_floor
-Cell.__ceil__ = cell_ceil
