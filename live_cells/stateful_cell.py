@@ -49,8 +49,11 @@ class StatefulCell(Cell):
             state.remove_observer(observer)
 
     def __eq__(self, other):
-        if isinstance(other, StatefulCell) and self.key is not None and other.key is not None:
-            return self.key == other.key
+        if self is other:
+            return True
+
+        if isinstance(other, StatefulCell):
+            return self.key != None and other.key != None and self.key == other.key
 
         return NotImplemented
 

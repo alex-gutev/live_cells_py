@@ -47,8 +47,11 @@ class DependentCell(Cell):
             )
 
     def __eq__(self, other):
+        if self is other:
+            return True
+
         if isinstance(other, DependentCell):
-            return self.key == other.key
+            return self.key != None and other.key != None and self.key == other.key
 
         return NotImplemented
 
