@@ -61,6 +61,75 @@ Expressions of cells can be arbitrarily complex:
    To include a constant value in a cell expression, convert it to a
    cell using :any:`live_cells.value`
 
+
+===================
+Logic and Selection
+===================
+
+The following methods are provided by all cell objects:
+
+``a.logand(b)``
+
+   Creates a cell that evaluates to the logical **and** of ``a`` and ``b``.
+
+``a.logor(b)``
+
+   Create a cell that evaluates to the logical **or** of ``a`` and ``b``.
+
+``a.lognot()``
+
+   Create a cell that evaluates to the logical **not** of ``a``.
+
+``a.select(b, c)``
+
+   Create a cell that evaluates to the value of ``b`` if ``a`` is
+   ``True`` or ``c`` if ``a`` is ``False``.
+
+.. note::
+
+   ``logand`` and ``logor`` are short-circuting, which means the value
+   of the second operand cell is not referenced if the result of the
+   expression is already known without it.
+
+.. code-block:: python
+
+   import live_cells as lc
+
+   a = lc.mutable(False)
+   b = lc.mutable(False)
+
+   c = lc.mutable(1)
+   d = lc.mutable(2)
+   
+   cond = a.logor(b)
+   cell = cond.select(c, d)
+
+   lc.watch(lambda: print(f'{cell()}'))
+
+   a.value = True  # Prints 1
+   a.value = False # Prints 2
+       
+
+The second argument to ``select`` can be omitted, in which case the
+cell's value will not be updated if the condition is ``False``.
+
+.. code-block:: python
+
+   import live_cells as lc
+
+   cond = lc.mutable(False)
+   a = lc.mutable(1)
+		
+   cell = cond.select(a)
+
+   lc.watch(lambda: print(f'{cell()}'))
+
+   cond.value = True  # Prints 1
+   a.value = 2        # Prints 2
+
+   cond.value = False # Prints 2
+   a.value = 4        # Prints 2
+   
 ======================
 Aborting a computation
 ======================
@@ -70,6 +139,12 @@ The computation of the value of a computed cell can be aborted using
 computed cell, the computation of the cell's value is aborted and its
 current value is preserved. This can be used to prevent a cell's value
 from being recomputed when a condition is not met.
+
+.. note::
+
+   The ``select`` method from the previous section uses
+   :any:`live_cells.none` to retain its current value when the
+   condition is ``False``.
 
 .. code-block:: python
 
