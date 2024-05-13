@@ -4,7 +4,7 @@ from .mutable_cell import MutableCell, mutable, batch, batched
 from .computed import computed, none
 from .watch import watch
 
-from . import numeric
+from . import numeric, boolean
 
 __all__ = [
     'Cell',
