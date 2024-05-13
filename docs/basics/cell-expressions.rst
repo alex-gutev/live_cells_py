@@ -134,9 +134,9 @@ cell's value will not be updated if the condition is ``False``.
 Aborting a computation
 ======================
 
-The computation of the value of a computed cell can be aborted using
+The computation of a computed cell's value can be aborted using
 :any:`live_cells.none`. When :any:`live_cells.none` is called inside a
-computed cell, the computation of the cell's value is aborted and its
+computed cell, the value computation function is exited and the cell's
 current value is preserved. This can be used to prevent a cell's value
 from being recomputed when a condition is not met.
 
