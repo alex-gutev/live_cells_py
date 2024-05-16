@@ -1,5 +1,7 @@
 ## Utilities used for testing
 
+from contextlib import contextmanager
+
 from live_cells.stateful_cell import StatefulCell, CellState
 
 class CountTestObserver:
@@ -70,35 +72,6 @@ class ValueTestObserver:
                     except:
                         pass
 
-class Observer:
-    """Installs a cell observer for a managed scope created with `with`."""
-
-    def __init__(self, cell, observer=CountTestObserver()):
-        """Create an Observer which adds `observer` on `cell`.
-
-        `observer` is added as an observer of `cell` when a managed
-        scope is entered, and removed when existing the managed scope.
-
-        """
-
-        self._cell = cell
-        self._observer = observer
-
-    def __enter__(self):
-        self._cell.add_observer(self._observer)
-
-        try:
-            # Compute value to ensure cell is active
-            self._cell.value
-
-        except:
-            pass
-
-        return self
-
-    def __exit__(self, exception_type, exception_value, exception_traceback):
-        self._cell.remove_observer(self._observer)
-
 class LifecycleCounter:
     """Keeps track of how many times init() and dispose() were called.
 
@@ -164,12 +137,13 @@ class MockException(Exception):
 
     pass
 
+@contextmanager
 def observe(cell, observer=CountTestObserver()):
-    """Add an `observer` to `cell` for the duration of a managed scope.
+    """Add an `observer` to `cell` for the lifetime of a managed context.
 
-    `observer` is added to `cell`, when entering a managed scope
-    created with `with`, and automatically removed when exiting the
-    scope:
+    This is a context manager that adds the observer `observer` to
+    `cell`, when entering the `with` block, and automatically removes
+    it when exiting the context.
 
     ```
     observer = CountTestObserver()
@@ -181,4 +155,17 @@ def observe(cell, observer=CountTestObserver()):
 
     """
 
-    return Observer(cell, observer)
+    cell.add_observer(observer)
+
+    # Compute value to ensure cell is active
+    try:
+        cell.value
+
+    except:
+        pass
+
+    try:
+        yield observer
+
+    finally:
+        cell.remove_observer(observer)
