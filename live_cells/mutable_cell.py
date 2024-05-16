@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from .stateful_cell import CellState
 from .persistent_stateful_cell import PersistentStatefulCell
 
@@ -131,40 +133,6 @@ class MutableCellState(CellState):
 
         cls._batched.clear()
 
-class BatchGuard:
-    """Batches changes to mutable cells within a given managed scope.
-
-    When used with `with`, the observers of the values of mutable
-    cells set within the managed scope are only notified of the value
-    changes (`update()`) when exiting the scope.
-
-    This has no effect when used when a batch update is already in
-    effect before the scope is entered.
-
-    Example:
-
-    ```
-    with BatchGuard():
-       a.value = 1
-       b.value = 2
-
-    # Observers of `a` and `b` are only notified when exiting the `with`.
-    ```
-
-    """
-
-    def __enter__(self):
-        self._batching = not MutableCellState._is_batch
-
-        if self._batching:
-            MutableCellState._begin_batch()
-
-    def __exit__(self, exception_type, exception_value, exception_traceback):
-        if self._batching:
-            self._batching = False
-            MutableCellState._end_batch()
-
-
 def mutable(value = None, key = None):
     """Create a mutable cell with an initial `value`.
 
@@ -175,15 +143,16 @@ def mutable(value = None, key = None):
     return MutableCell(value=value, key = key)
 
 
+@contextmanager
 def batch():
-    """Batches changes to mutable cells within a given managed scope.
+    """Batch changes to mutable cells within a given managed context.
 
-    When used with `with`, the observers of the values of mutable
-    cells set within the managed scope are only notified of the value
-    changes (`update()`) when exiting the scope.
+    When this context manager is used, the observers of the mutable
+    cells, that are set within the `with` block managed by the context
+    manager, are only notified when exiting the context.
 
     This has no effect when used when a batch update is already in
-    effect before the scope is entered.
+    effect before the context manager is created.
 
     Example:
 
@@ -192,12 +161,23 @@ def batch():
        a.value = 1
        b.value = 2
 
-    # Observers of `a` and `b` are only notified when exiting the `with`.
+    # Observers of `a` and `b` are only notified when
+    # exiting the `with` block.
     ```
 
     """
 
-    return BatchGuard()
+    batching = not MutableCellState._is_batch
+
+    if batching:
+        MutableCellState._begin_batch()
+
+    try:
+        yield
+
+    finally:
+        if batching:
+            MutableCellState._end_batch()
 
 def batched(fn):
     """Batch the updates to the cell values within the decorated function.
