@@ -312,4 +312,60 @@ This results in the following being printed:
    text = "10"
    error(all=False): False
    error(all=True): True
-   
+
+=============
+Peeking Cells
+=============
+
+If you want to use the value of a cell in a computed cell but don't
+want changes in the cells value triggering a recomputation, access the
+cell via the ``peek`` property.
+
+.. code-block:: python
+
+   import live_cells as lc
+
+   a = lc.mutable(0)
+   b = lc.mutable(1)
+
+   c = lc.computed(lambda: a() + b.peek())
+
+   lc.watch(lambda: print(f'{c()}'))
+
+   a.value = 3 # Prints: 4
+   b.value = 5 # Doesn't print anything
+   a.value = 7 # Prints: 13
+
+In this example ``c`` is a computed cell that references the value of
+``a`` and *peeks* the value of ``b``. Changing the value of ``a``
+causes the value of ``c`` to be recomputed, and hence the watch
+function is called. However, changing the value of ``b`` does not
+cause the value of ``c`` to be recomputed due to the value being
+accessed via the ``peek`` property.
+
+.. note::
+
+   ``peek`` is a property that returns a cell:
+
+   .. code-block:: python
+
+      b = lc.mutable(1)
+      peek_b = b.peek
+
+      print(peek_b.value) # Prints 1
+
+You may be asking why do we need ``peek`` instead of just accessing
+the value of ``b`` directly using ``b.value``. The reason for this is
+due to the cell lifecycle. Cells are only active when they have at
+least one observer.
+
+When a cell is active it recomputes its value in response to changes
+in the values of its argument cells, if any. When a cell is inactive,
+it does not recompute it's value when the values of its argument cells
+change. This means the value of a cell may no longer be current if it
+doesn't have at least one observer.
+
+The ``peek`` property returns a cell that takes care of observing the
+peeked cell, so that it remains active, but at the same prevents the
+observers, added through the cell returned by ``peek``, from being
+notified when its value changes.
