@@ -204,3 +204,112 @@ to be handled using ``try`` and ``except`` inside computed cells.
 
    text.value = 'not a number'
    print(is_value.value) # Prints False
+
+Cells provide two utility methods, ``on_error`` and ``error`` for
+handling exceptions thrown in computed cells.
+
+The ``on_error`` method creates a cell that selects the value of
+another cell when an exception is thrown.
+
+.. code-block:: python
+
+   import live_cells as lc
+
+   text = lc.mutable('0')
+   m = lc.mutable(2)
+
+   n = lc.computed(lambda: int(text()))
+
+   result = n.on_error(m)
+
+   str.value = '3'
+   print(result.value) # Prints 3
+
+   str.value = 'not a number'
+   print(result.value) # Prints 2
+
+``on_error`` accepts an optional ``type`` argument. When a non-None
+``type`` is given only exceptions of the given type are handled.
+
+.. code-block:: python
+
+   result = n.on_error(m, type=ValueError)
+
+The validation logic in the previous example can be implemented more
+succinctly using:
+
+.. code-block:: python
+
+   import live_cells as lc
+
+   text = lc.mutable('0')
+   n = lc.computed(lambda: int(text()))
+
+   is_valid = (n > lc.value(0)).on_error(lc.value(False))
+   
+The ``error`` method creates a cell that holds the last exception that
+was raised or ``None`` if no exception has been raised:
+
+.. code-block:: python
+
+   error = n.error()
+
+   @lc.watch
+   def watch_errors():
+       if error() is not None:
+           print(f'Error: {error()}')
+
+Like ``on_error`` this method also accepts a ``type`` argument. When
+this argument is given, the cell evaluates to the exception raised
+only if it is of the given exception type.
+
+.. code-block:: python
+
+   parse_error = n.error(type=ValueError)
+
+
+``error`` also accepts an ``all`` argument. When this is ``True``, the
+value of the *error* cell resets to ``None`` if the value of the cell
+on which ``error`` is called changes its value such that it no longer
+raises an exception. If ``all`` is ``False`` (the default), the value
+of the *error* does not change if the cell on which ``error`` is
+called does not raise an exception.
+
+The difference between the two is demonstrated with the following
+example:
+
+.. code-block:: python
+
+   import live_cells as lc
+		
+   text = mutable('0')
+   n = lc.computed(lambda: int(text()))
+		
+   e1 = n.error() # all=False
+   e2 = n.error(all=True)
+
+   @lc.watch
+   def watch_errors():
+       print(f'\ntext = "{text()}")
+       print(f'error(all=False): {e1() is None}')
+       print(f'error(all=True): {e2() is None}')
+   
+   text.value = 'not a number'
+   text.value = '10'
+
+This results in the following being printed:
+
+.. code-block:: text
+
+   text = "0"
+   error(all=False): True
+   error(all=True): True
+
+   text = "not a number"
+   error(all=False): False
+   error(all=True): False
+
+   text = "10"
+   error(all=False): False
+   error(all=True): True
+   
