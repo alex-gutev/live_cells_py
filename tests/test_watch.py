@@ -1,5 +1,5 @@
 from live_cells import watch, mutable, batch, computed
-from .util import LifecycleCounter, LifecycleTestCell
+from .util import LifecycleCounter, LifecycleTestCell, ValueTestObserver, observe
 
 class WatchTracker:
     def __init__(self):
@@ -317,3 +317,94 @@ class TestChangesOnly:
             c.value = 5
 
         assert track.values == [6, 10]
+
+class TestPeekCell:
+    """Test peeking cell values."""
+
+    def test_peek_value_equals_cell_value(self):
+        """Test that the value of a peek cell equals the value of the original cell."""
+
+        cell = mutable(0)
+        peek = cell.peek
+
+        assert peek.value == 0
+
+        cell.value = 2
+        assert peek.value == 2
+
+    def test_peek_does_not_notify_observers(self):
+        """Test that peek cells do not notify their observers."""
+
+        a = mutable(0)
+        b = mutable(1)
+
+        sum = computed(lambda: a.peek() + b())
+
+        with observe(sum, ValueTestObserver()) as observer:
+            a.value = 1
+            a.value = 2
+            a.value = 3
+            b.value = 5
+            b.value = 10
+            a.value = 2
+            b.value = 13
+
+            assert observer.values == [8, 13, 15]
+
+    def test_peek_cells_compare_equal_same_cell(self):
+        """Test that peeks cells compare equal when their argument cells are equal."""
+
+        a = mutable(0)
+
+        p1 = a.peek
+        p2 = a.peek
+
+        assert p1 == p2
+        assert hash(p1) == hash(p2)
+
+    def test_peek_cells_compare_not_equal_different_cells(self):
+        """Test that peek cells compare not equal when their argument cells are not equal."""
+
+        a = mutable(0)
+        b = mutable(0)
+
+        p1 = a.peek
+        p2 = b.peek
+
+        assert p1 != p2
+        assert p1 == p1
+
+    def test_peek_cells_manage_same_observers(self):
+        """Test that peeks cells manage the same set of observers for a given argument cell."""
+
+        counter = LifecycleCounter()
+        a = LifecycleTestCell(1, counter)
+
+        def p():
+            return a.peek
+
+        assert counter.count_dispose == 0
+
+        with observe(p()) as observer:
+            p().remove_observer(observer)
+
+            assert counter.count_init == 1
+            assert counter.count_dispose == 1
+
+    def test_remove_peek_observer(self):
+        """Test that the correct observer is removed when removing a peek cell observer."""
+
+        counter = LifecycleCounter()
+        a = LifecycleTestCell(1, counter)
+
+        def p():
+            return a.peek
+
+        assert counter.count_dispose == 0
+
+        with observe(p()):
+            observer = ValueTestObserver()
+            p().remove_observer(observer)
+
+            assert counter.count_init == 1
+            assert counter.count_dispose == 0
