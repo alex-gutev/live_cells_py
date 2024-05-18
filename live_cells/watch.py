@@ -124,24 +124,42 @@ class CellWatchObserver:
                 self.call_watch()
 
 def watch(callback=None, schedule=None):
-    """Register `callback` as a cell watch function.
+    """Register a ``callback`` to run when the values of cells change.
 
-    `callback` (A function of no arguments) is called once immediately
-    to determine the cells referenced within it. It is then called
-    again whenever the values of the cells referenced within it
+    ``callback`` (A function of no arguments) is called once
+    immediately to determine the cells referenced within it. It is
+    then called again whenever the values of the referenced cells
     change.
 
     To stop `callback` from being called for further changes to the
-    cell values, call the `.stop()` method on the object returned by
-    this function.
+    referenced cell values, call the :any:`CellWatcher.stop` method on
+    the :any:`CellWatcher` object returned by this function.
 
-    `schedule` is an optional function which is called with the
-    callback function provided as an argument. When `schedule` is
-    called, it should schedule the callback function provided to it to
-    be called.
+    .. attention::
 
+       Within ``callback``, Cells should only be referenced using the
+       function call syntax and never by referencing the ``value``
+       property directly.
 
-    This function may be used as a decorator.
+    .. note::
+
+       This function may be used as a decorator by omitting the
+       ``callback`` argument, in which case the decorated function is
+       used as the watch function. The watch function's
+       :any:`CellWatcher` is then referenced using the name of the
+       decorated function.
+
+    :param callback: The watch function.
+    :type callback: function
+
+    :param schedule: A function which is called with the callback\
+    function provided as an argument. When this function is called, it\
+    should schedule the callback function provided to it to be called.
+
+    :type schedule: function, optional
+
+    :returns: The handle to the watch function's state.
+    :rtype: CellWatcher
 
     """
 
