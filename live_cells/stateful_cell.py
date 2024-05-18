@@ -179,8 +179,7 @@ class CellState:
         This indicates a bug in live_cells unless the error originates
         from a cell class provided by third-party code.'''
 
-        # TODO: Make copy of observers
-        for observer in self._observers:
+        for observer in self._observers.copy():
             try:
                 observer.will_update(self.cell)
 
@@ -207,8 +206,7 @@ class CellState:
         self._notify_count -= 1
         assert self._notify_count >= 0
 
-        # TODO: Make copy of observers
-        for observer in self._observers:
+        for observer in self._observers.copy():
             try:
                 observer.update(self.cell, did_change)
 
