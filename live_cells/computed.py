@@ -46,14 +46,20 @@ def computed(compute=None, key = None, changes_only = False):
     )
 
 def none(default_value=None):
-    """Stop the computation of the current cell's value.
+    """Stop the computation of a computed cell's value.
 
     When this method is called inside the value computation function
-    of a cell, the cell's value is not updated. Instead the cell's
-    current value is preserved.
+    of a computed cell, the cell's value is not updated. Instead the
+    cell's current value is preserved.
 
     If this function is called during the computation of the cell's
-    initial value, the cell's initial value is set to `default_value`.
+    initial value, the cell's initial value is set to ``default_value``.
+
+    :param default_value: The value to assign to the cell if called\
+    during the computation of its initial value.
+
+    :raises StopComputeException: This exception is raised to signal\
+    to the enclosing computed cell to abort the computation.
 
     """
 
