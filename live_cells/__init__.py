@@ -1,17 +1,15 @@
 from .cell import Cell
-from .constant_cell import ConstantCell, value
-from .mutable_cell import MutableCell, mutable, batch, batched
+from .constant_cell import value
+from .mutable_cell import mutable, batch, batched
 from .computed import computed, none
-from .watch import watch
+from .watch import CellWatcher, watch
 
 from . import numeric, boolean, error_handling, peek_cell
 
 __all__ = [
     'Cell',
-    'ConstantCell',
-    'value',
 
-    'MutableCell',
+    'value',
     'mutable',
     'batch',
     'batched',
@@ -19,6 +17,7 @@ __all__ = [
     'computed',
     'none',
 
+    'CellWatcher',
     'watch',
 
     'StopComputeException'
