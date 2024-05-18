@@ -1,3 +1,5 @@
+import logging
+
 from .tracking import ArgumentTracker
 from .exceptions import StopComputeException
 
@@ -103,8 +105,7 @@ class CellWatchObserver:
             pass
 
         except:
-            # TODO: Print to log
-            pass
+            logging.debug('Unhandled exception in watch function', exc_info=True)
 
 
     # Cell Observer Methods

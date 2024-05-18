@@ -1,3 +1,5 @@
+import logging
+
 from .cell import Cell
 
 class StatefulCell(Cell):
@@ -183,8 +185,9 @@ class CellState:
             try:
                 observer.will_update(self.cell)
 
-            except: # TODO: Print log
-                pass
+            except:
+                logging.debug('Exception raised by observer.will_update()',
+                              exc_info=True)
 
     def notify_update(self, *, did_change=True):
         """Notify the observers that the cell's value has changed.
@@ -210,8 +213,9 @@ class CellState:
             try:
                 observer.update(self.cell, did_change)
 
-            except: # TODO: Print log
-                pass
+            except:
+                logging.debug('Exception raised by observer.update()',
+                              exc_info=True)
 
 class GlobalStateMap:
     """Mas cell keys to shared cell states."""
