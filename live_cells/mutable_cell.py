@@ -134,9 +134,16 @@ class MutableCellState(CellState):
         cls._batched.clear()
 
 def mutable(value = None, key = None):
-    """Create a mutable cell with an initial `value`.
+    """Create a mutable cell with an initial ``value``.
 
-    The cell is identified by `key` if it is not None.
+    The value of a mutable cell can be changed by setting its
+    ``value`` property.
+
+    :param value: The initial value of the cell, defaults to *None*.
+
+    :param key: Key identifying the cell if not *None*, defaults to *None*.
+
+    :returns: A mutable cell.
 
     """
 
