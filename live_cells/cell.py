@@ -9,15 +9,18 @@ class Cell:
 
     @property
     def value(self):
-        """Retrieve the value of the cell."""
+        """The value of the cell."""
 
         raise NotImplementedError
 
     def __call__(self):
         """Retrieve the value of the cell and track it as a dependency.
 
-        This should be used, instead of the `value` property, when the
-        cell needs to be registered automatically as a dependency.
+        This should be used, instead of the :any:`Cell.value`
+        property, when the cell needs to be registered automatically
+        as a dependency.
+
+        :returns: The value of the cell.
 
         """
 
@@ -25,24 +28,30 @@ class Cell:
         return self.value
 
     def add_observer(self, observer):
-        """Add an `observer` to the cell.
+        """Add an ``observer`` to the cell.
 
-        `observer` is notified whenever the value of this cell
+        ``observer`` is notified whenever the value of this cell
         changes.
+
+        :param observer: The observer to add to the cell.
 
         """
 
         raise NotImplementedError
 
     def remove_observer(self, observer):
-        """Remove an `observer` from the cell.
+        """Remove an ``observer`` from the cell.
 
-        After `observer` is removed, it is no longer notified when the
-        value of the cell changes.
+        After ``observer`` is removed, it is no longer notified when
+        the value of the cell changes.
 
-        This method has to be called the same number of times as
-        `add_observer` was called for the same `observer`, in order
-        for the observer to actually be removed.
+        .. note::
+
+           To remove a given ``observer``, this method has to be
+           called the same number of times as `add_observer` was
+           called for the same `observer`.
+
+        :param observer: The observer to remove.
 
         """
 
