@@ -32,6 +32,19 @@ class ConstantCell(Cell):
         return hash(self.value)
 
 def value(value):
-    """Create a ConstantCell holding `value`."""
+    """Create a cell with a constant ``value``.
+
+    The value of a constant cell never changes and its observers are
+    never notified.
+
+    .. note::
+
+       Two constant cells compare equal if their values are equal.
+
+    :param value: The constant value of the cell.
+
+    :returns: A constant cell.
+
+    """
 
     return ConstantCell(value)
