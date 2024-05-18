@@ -12,13 +12,6 @@ class StopComputeException(Exception):
     """
 
     def __init__(self, default_value=None):
-        """Create an exception that stops the computation of a cell's value.
-
-        If this exception is raised during the computation of the
-        cell's initial value, the cell's initial value is set to
-        `default_value`.
-
-        """
         self.default_value = default_value
 
         super().__init__("StopComputeException() raised. If you're seeing this you most likely"
