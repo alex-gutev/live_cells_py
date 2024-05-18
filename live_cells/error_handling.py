@@ -13,10 +13,10 @@ def on_error(self, other, type=None):
     ``other`` only when an exception of the same type as that provided
     in ``type`` is raised.
 
-    .. note::
+    .. note:
 
-       Cells returned by this method compare equal if the same
-       ``other`` and ``type`` are provided for both cells.
+       Cells returned by this method compare equal when called on the
+       same object and the same arguments are provided.
 
     :param other: The cell to evaluate to when this cell raises an exception.
     :type other: Cell
@@ -52,10 +52,10 @@ def error(self, all=False, type=None):
     If ``type`` is not None, the returned cell only captures
     exceptions which are of the type provided in ``type``.
 
-    .. note::
+    .. note:
 
-       Cells returned by this method compare equal if the same ``all``
-       and ``type`` are provided for both cells.
+       Cells returned by this method compare equal when called on the
+       same object and the same arguments are provided.
 
     :param all: If *True*, the returned cell evaluates to *None* when
                 this cell does not raise an exception. Defaults to

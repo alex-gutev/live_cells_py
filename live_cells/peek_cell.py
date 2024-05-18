@@ -4,13 +4,14 @@ from .extension import cell_extension
 @cell_extension(name='peek')
 @property
 def peek(self):
-    """Read the value of cell `self` without reacting to changes.
+    """Read the value of this cell without reacting to changes.
 
-    The returned cell has the same value as `self` but does not notify
-    its observers when the value of `self` changes.
+    This property returns a cell that has the same value as this cell
+    but does not notify its observers when the value of this cell
+    changes.
 
-    This should be used rather than accessing the `value` property
-    directly to ensure that the `self` cell is active.
+    This should be used rather than accessing the :any:`Cell.value`
+    property directly to ensure that this cell is active.
 
     """
 

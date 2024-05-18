@@ -5,6 +5,10 @@ class StopComputeException(Exception):
     function of a cell, the cell's value is not updated. Instead the
     cell's current value is preserved.
 
+    :param default_value: The value to initialize the cell to, if this
+                          exception is thrown while computing the
+                          initial value of the cell.
+
     """
 
     def __init__(self, default_value=None):
