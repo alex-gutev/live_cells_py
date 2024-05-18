@@ -148,22 +148,21 @@ def batch():
     """Batch changes to mutable cells within a given managed context.
 
     When this context manager is used, the observers of the mutable
-    cells, that are set within the `with` block managed by the context
+    cells that are set within the *with* block managed by the context
     manager, are only notified when exiting the context.
 
-    This has no effect when used when a batch update is already in
-    effect before the context manager is created.
+    This has no effect when used when a batching is already in effect
+    before the context manager is created.
 
-    Example:
+    .. code-block::
+       :caption: Example
 
-    ```
-    with batch():
-       a.value = 1
-       b.value = 2
+       with batch():
+           a.value = 1
+           b.value = 2
 
-    # Observers of `a` and `b` are only notified when
-    # exiting the `with` block.
-    ```
+       # Observers of `a` and `b` are only notified when
+       # exiting the `with` block.
 
     """
 
@@ -180,13 +179,21 @@ def batch():
             MutableCellState._end_batch()
 
 def batched(fn):
-    """Batch the updates to the cell values within the decorated function.
+    """Apply the :any:`batch` context manager to the decorated function.
 
-    This decorator is equivalent to replacing every call to `fn` with
-    the following:
+    This decorator is equivalent to replacing wrapping a call to
+    ``fn`` with the following:
 
-    with batch():
-       fn()
+    .. code-block::
+
+       with batch():
+           fn()
+
+    :param fn: A function
+    :type fn: function
+
+    :returns: A function that calls ``fn`` while applying cell batching.
+    :rtype: function
 
     """
 
