@@ -18,16 +18,16 @@ def computed(compute=None, key = None, changes_only = False):
        used as the compute function. The cell is then referenced using
        the name of the decorated function.
 
-    :param compute: Function of no arguments called to compute the\
-    value of the cell.
+    :param compute: Function of no arguments called to compute the
+                    value of the cell.
 
     :type compute: function
 
     :param key: Key identifying the cell if not *None*. Defaults to *None*.
 
-    :param changes_only: If *True* the cell only notifies its\
-    observers if its new value is not equal to its previous\
-    value. Defaults to *False*.
+    :param changes_only: If *True* the cell only notifies its
+                         observers if its new value is not equal to
+                         its previous value. Defaults to *False*.
 
     :returns: A computed cell.
 
@@ -55,11 +55,12 @@ def none(default_value=None):
     If this function is called during the computation of the cell's
     initial value, the cell's initial value is set to ``default_value``.
 
-    :param default_value: The value to assign to the cell if called\
-    during the computation of its initial value.
+    :param default_value: The value to assign to the cell if called
+                          during the computation of its initial value.
 
-    :raises StopComputeException: This exception is raised to signal\
-    to the enclosing computed cell to abort the computation.
+    :raises StopComputeException: This exception is raised to signal
+                                  to the enclosing computed cell to
+                                  abort the computation.
 
     """
 

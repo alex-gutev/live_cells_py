@@ -21,8 +21,8 @@ def on_error(self, other, type=None):
     :param other: The cell to evaluate to when this cell raises an exception.
     :type other: Cell
 
-    :param type: Type of exceptions to handle or *None* (default) to\
-    handle all exceptions.
+    :param type: Type of exceptions to handle or *None* (default) to
+                 handle all exceptions.
 
     :returns: A new cell.
     :rtype: Cell

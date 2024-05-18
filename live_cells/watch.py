@@ -152,9 +152,10 @@ def watch(callback=None, schedule=None):
     :param callback: The watch function.
     :type callback: function
 
-    :param schedule: A function which is called with the callback\
-    function provided as an argument. When this function is called, it\
-    should schedule the callback function provided to it to be called.
+    :param schedule: A function which is called with the callback
+                    function provided as an argument. When this
+                    function is called, it should schedule the
+                    callback function provided to it to be called.
 
     :type schedule: function, optional
 
