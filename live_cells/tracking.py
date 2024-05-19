@@ -1,28 +1,39 @@
+import threading
+
 class ArgumentTracker:
-    """Installs a tracker for a given managed scope.
+    """Context manager that installs an argument tracker for a given context.
 
-    This class is intended to be used with `with` to install a cell
-    argument tracker for the given managed scope:
+    The function ``tracker`` is called whenever a cell is referenced,
+    with the function call syntax, within the context managed by the
+    ArgumentTracker. The referenced cell is passed as an argument.
 
-    Example:
+    The previous tracker function is restored when exiting the context.
 
-    ```
-    def track_arg(arg):
-        print(f'Used: {arg}')
+    .. code-block::
 
-    with ArgumentTracker(track_arg):
-       ....
-    ```
+       def track_arg(arg):
+           print(f'Used: {arg}')
 
-    The argument tracker function is called whenever the value of a
-    cell is referenced with the function call syntax.
+       with ArgumentTracker(track_arg):
+           ....
 
-    The previous tracker function is restored when exiting the scope.
+
+    :param tracker: A function of one argument, called when a cell is
+                    referenced.
+
+    :type tracker: function
+
+    :param override: If true the ``tracker`` function can also
+                     override the values of the referenced cells by
+                     returning a new value for the cell.
+
+    :type override: bool
 
     """
 
     ## Function tracking argument cells
-    _track_argument = None
+    _data = threading.local()
+    _data.track = None
 
     @classmethod
     def track(cls, arg):
@@ -33,20 +44,24 @@ class ArgumentTracker:
 
         """
 
-        if cls._track_argument is not None:
-            cls._track_argument(arg)
+        if cls._data.track is not None:
+            return cls._data.track(arg)
 
-    def __init__(self, tracker):
-        """Create an `ArgumentTracker` that install `tracker` as the track argument function."""
+        return arg.value
 
-        self._tracker = tracker
+    def __init__(self, tracker, override=False):
+        def track_fn(cell):
+            tracker(cell)
+            return cell.value
+
+        self._tracker = tracker if (override or tracker is None) else track_fn
 
     def __enter__(self):
-        self._previous = ArgumentTracker._track_argument
-        ArgumentTracker._track_argument = self._tracker
+        self._previous = ArgumentTracker._data.track
+        ArgumentTracker._data.track = self._tracker
 
     def __exit__(self, exception_type, exception_value, exception_traceback):
-        ArgumentTracker._track_argument = self._previous
+        ArgumentTracker._data.track = self._previous
 
 def with_tracker(tracker):
     """Install a cell dependency `tracker` to be in effect within the decorated function.

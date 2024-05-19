@@ -24,8 +24,7 @@ class Cell:
 
         """
 
-        ArgumentTracker.track(self)
-        return self.value
+        return ArgumentTracker.track(self)
 
     def add_observer(self, observer):
         """Add an ``observer`` to the cell.
