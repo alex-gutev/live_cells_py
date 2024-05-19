@@ -168,6 +168,39 @@ longer called when the values of the cells it is observing change.
 
      watcher.stop()
 
+:any:`live_cells.watch` also takes an optional ``schedule`` argument,
+which if not *None* is a function that is called when the watch
+function should be called, with the watch callback passed as an
+argument. The ``schedule`` function should *schedule* the callback
+function to it, to be called at a later stage. If ``schedule`` is
+*None*, the watch function is called immediately when the cells
+referenced within it change.
+
+.. code-block:: python
+
+   import gevent
+   import live_cells as lc
+
+   a = lc.mutable()
+
+   @lc.watch(schedule=gevent.spawn)
+   def watch():
+       print(f'{a()}')
+
+In this example a watch function observing cell ``a`` is defined. When
+the value of ``a`` changes, the watch function is not called
+immediately but is scheduled to run on a `gevent
+<http://www.gevent.org/>`_ green thread, using ``gevent.spawn``.
+
+.. important::
+
+   The watch function sees the values of the cells, which are
+   referenced within it, as they are at the time the ``schedule``
+   function is called and not at the time when the watch function is
+   actually run. This guarantees that the watch function will not
+   "miss" updates if it runs after the values of the cells are changed
+   again.
+
 ==============
 Computed Cells
 ==============
