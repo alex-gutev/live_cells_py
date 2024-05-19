@@ -15,6 +15,7 @@ from Live Cells for Dart.
 
    basics/cells.rst
    basics/cell-expressions.rst
+   basics/pitfalls.rst
 	     
    modules.rst
 
