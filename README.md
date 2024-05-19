@@ -60,8 +60,8 @@ the decorator of `watch`:
 ```python
 @lc.watch
 def watcher():
-	print(f'A = {a()}')
-	print(f'B = {b()}')
+    print(f'A = {a()}')
+    print(f'B = {b()}')
 ```
 
 Cells can also be defined as a function of the values of one or more
