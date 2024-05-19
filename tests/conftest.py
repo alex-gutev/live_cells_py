@@ -8,8 +8,11 @@ def test_watch():
 
     watchers = []
 
-    def decorator(fn):
-        watcher = watch(fn)
+    def decorator(fn=None, *args, **kwargs):
+        if fn is None:
+            return lambda f: decorator(f, *args, **kwargs)
+
+        watcher = watch(fn, *args, **kwargs)
         watchers.append(watcher)
 
         return watcher

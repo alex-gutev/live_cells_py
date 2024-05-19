@@ -159,6 +159,43 @@ class TestCellWatcher:
         assert counter.count_init == 1
         assert counter.count_dispose == 0
 
+    def test_schedule(self, test_watch):
+        """Test watch function scheduling."""
+
+        a = mutable(0)
+        b = mutable(1)
+
+        calls = []
+        first = True
+
+        def schedule(f):
+            nonlocal first
+
+            if first:
+                first = False
+                f()
+
+            else:
+                calls.append(f)
+
+        @test_watch(schedule = schedule)
+        def watch_ab():
+            return (a(), b())
+
+        a.value = 5
+        b.value = 10
+
+        a.value = 23
+        b.value = 33
+
+        assert len(calls) == 4
+
+        assert calls[0]() == (5, 1)
+        assert calls[1]() == (5, 10)
+        assert calls[2]() == (23, 10)
+        assert calls[3]() == (23, 33)
+
+
 class TestChangesOnly:
     """Test the changesOnly option"""
 
