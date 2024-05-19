@@ -273,6 +273,61 @@ In this example:
    compute function. The cell can then be referenced using the name of
    the decorated function.
 
+The :any:`live_cells.computed` function takes a ``changes_only``
+argument which allows you to control whether the computed cell
+notifies its observers if its value hasn't changed after a
+recomputation. By default this is ``False``, which means the computed
+cell notifies its observers whenever it is recomputed. If
+``changes_only`` is ``True``, the cell only notifies its observers if
+the new value of the cell is not equal to its previous value.
+
+This is demonstrated with the following example:
+
+.. code-block:: python
+
+   import live_cells as lc
+
+   a = lc.mutable(0)
+   b = lc.computed(lambda: a % 2, changes_only=True)
+
+   lc.watch(lambda: print(f'{b()}'))
+
+   a.value = 1
+   a.value = 3
+   a.value = 5
+   a.value = 6
+   a.value = 8
+
+This results in the following being printed to standard output:
+
+.. code-block:: text
+
+   0
+   1
+   0
+
+Notice that only three lines are printed to standard output, even
+though the value of the computed cell argument ``a`` was changed five
+times.
+
+If ``changes_only=True`` is omitted from the definition of ``b``, the
+following is printed to standard output:
+
+.. code-block:: text
+
+   0
+   1
+   1
+   1
+   0
+   0
+
+Notice that a new line is printed to standard output whenever the
+value of ``a``, which is an argument of ``b`` is changed. This is
+because ``b`` notifies its observers whenever the value of its
+argument ``a`` has changed, even if ``b``\ 's new value is equal to
+its previous value.
+   
 =============
 Batch Updates
 =============
