@@ -24,8 +24,8 @@ Cells are defined as follows:
 ```python
 import live_cells as lc
 
-a = lc.mutable(0);
-a = lc.mutable(0);
+a = lc.mutable(0)
+a = lc.mutable(0)
 ```
 
 And are observed as follows:
@@ -41,9 +41,9 @@ and `b` to standard output. It is called whenever the value of `a` or
 For example the following code, which sets the values of `a` and `b`:
 
 ```python
-a.value = 1;
-b.value = 2;
-a.value = 3;
+a.value = 1
+b.value = 2
+a.value = 3
 ```
 
 Results in the following being printed to standard output:
@@ -78,7 +78,7 @@ of either `a` or `b` changes.
 This cell can also be defined more succinctly as an expression of cells:
 
 ```python
-c = a + b;
+c = a + b
 ```
 
 When the following is executed:
