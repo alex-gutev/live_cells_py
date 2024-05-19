@@ -2,6 +2,7 @@ import logging
 
 from .tracking import ArgumentTracker
 from .exceptions import StopComputeException
+from .maybe import Maybe
 
 class CellWatcher:
     """Maintains the state of a cell watch function."""
@@ -88,16 +89,17 @@ class CellWatchObserver:
         """Call the watch function scheduling it if necessary."""
 
         if self.schedule:
-            self.schedule(self.call_callback)
+            self.schedule_call()
 
-        self.call_callback()
+        else:
+            with ArgumentTracker(self.track_argument):
+                self.call_callback()
 
     def call_callback(self):
         """Call the watch function."""
 
         try:
-            with ArgumentTracker(self.track_argument):
-                self.callback()
+            return self.callback()
 
         except StopComputeException:
             # Stop execution of watch function
@@ -107,6 +109,23 @@ class CellWatchObserver:
         except:
             logging.debug('Unhandled exception in watch function', exc_info=True)
 
+    def schedule_call(self):
+        """Schedule a call to the watch function callback, using ``self.schedule``."""
+
+        arg_values = {arg: Maybe.wrap(arg) for arg in self.arguments}
+
+        def bind_args(arg):
+            if arg in arg_values:
+                return arg_values[arg].unwrap()
+
+            self.track_argument(arg)
+            return arg.value
+
+        def callback():
+            with ArgumentTracker(bind_args, override=True):
+                return self.call_callback()
+
+        self.schedule(callback)
 
     # Cell Observer Methods
 
