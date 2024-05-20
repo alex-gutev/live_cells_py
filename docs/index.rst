@@ -9,6 +9,12 @@ Welcome to Live Cells Python's documentation!
 Live Cells Python is a reactive programming library for Python, ported
 from Live Cells for Dart.
 
+To install Live Cells Python run the following command:
+
+.. code-block:: shell
+
+   pip install live-cells-py
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
