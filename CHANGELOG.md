@@ -1,3 +1,7 @@
+# 0.1.1 - 2024-05-20
+
+* Add installation instructions to README.
+
 # 0.1.0 - 2024-05-19
 
 Initial Release.
