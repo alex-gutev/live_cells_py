@@ -7,6 +7,14 @@
 Live Cells Python is a reactive programming library for Python, ported
 from [Live Cells](https://livecells.viditrack.com/) for Dart.
 
+## Installation
+
+Run the following command to install Live Cells Python:
+
+``sh
+pip install live-cells-py
+``
+
 ## Examples
 
 > [!NOTE]
