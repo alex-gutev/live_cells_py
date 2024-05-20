@@ -11,9 +11,9 @@ from [Live Cells](https://livecells.viditrack.com/) for Dart.
 
 Run the following command to install Live Cells Python:
 
-``sh
+```sh
 pip install live-cells-py
-``
+```
 
 ## Examples
 
