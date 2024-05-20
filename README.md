@@ -1,8 +1,7 @@
 # Live Cells Python
 
-> [!CAUTION]
-> This software is still in beta, and will likely experience rapid
-> changes before the first official release.
+**This software is still in beta, and will likely experience rapid
+changes before the first official release.**
 
 Live Cells Python is a reactive programming library for Python, ported
 from [Live Cells](https://livecells.viditrack.com/) for Dart.
@@ -17,11 +16,10 @@ pip install live-cells-py
 
 ## Examples
 
-> [!NOTE]
-> This section contains examples demonstrating the main features of
-> the library. Head to the
-> [documentation](https://alex-gutev.github.io/live_cells_py/index.html),
-> for more information on how to use this library.
+**This section contains examples demonstrating the main features of
+the library. Head to the
+[documentation](https://alex-gutev.github.io/live_cells_py/index.html),
+for more information on how to use this library.**
 
 The basic building block of Live Cells is the cell, which is an object
 with a value and a set of observers, which react to changes in the
