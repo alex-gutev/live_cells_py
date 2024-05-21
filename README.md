@@ -97,7 +97,7 @@ output whenever the sum exceeds 100:
 @lc.watch
 def watch_sum():
     if c() > 100:
-	    print('Sum exceeds 100!!!')
+        print('Sum exceeds 100!!!')
 ```
 
 When the following is executed:
