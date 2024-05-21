@@ -87,6 +87,19 @@ This cell can also be defined more succinctly as an expression of cells:
 c = a + b
 ```
 
+That looks exactly like a normal variable definition.
+
+This can be used to run a routine automatically whenever a certain
+condition is met. For example, let's print a message to standard
+output whenever the sum exceeds 100:
+
+```python
+@lc.watch
+def watch_sum():
+    if c() > 100:
+	    print('Sum exceeds 100!!!')
+```
+
 When the following is executed:
 
 ```python
