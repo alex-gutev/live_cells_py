@@ -1,3 +1,7 @@
+# 0.1.2 - 2024-05-21
+
+* Fix issue with argument cell tracking on green threads.
+
 # 0.1.1 - 2024-05-20
 
 * Add installation instructions to README.
