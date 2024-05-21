@@ -1,3 +1,7 @@
+# 0.1.3 - 2024-05-21
+
+* Fix bugs in examples in README
+
 # 0.1.2 - 2024-05-21
 
 * Fix issue with argument cell tracking on green threads.
