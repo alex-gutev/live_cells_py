@@ -44,10 +44,19 @@ class ArgumentTracker:
 
         """
 
-        if cls._data.track is not None:
-            return cls._data.track(arg)
+        tracker = cls._tracker
+
+        if tracker is not None:
+            return tracker(arg)
 
         return arg.value
+
+    @classmethod
+    @property
+    def _tracker(cls):
+        """The argument cell tracker callback currently in effect."""
+
+        return cls._data.track if hasattr(cls._data, 'track') else None
 
     def __init__(self, tracker, override=False):
         def track_fn(cell):
@@ -57,7 +66,7 @@ class ArgumentTracker:
         self._tracker = tracker if (override or tracker is None) else track_fn
 
     def __enter__(self):
-        self._previous = ArgumentTracker._data.track
+        self._previous = ArgumentTracker._tracker
         ArgumentTracker._data.track = self._tracker
 
     def __exit__(self, exception_type, exception_value, exception_traceback):
