@@ -1,3 +1,7 @@
+# 0.1.4 - 2024-05-22
+
+* Fix issue with unit tests being installed as `tests` package.
+
 # 0.1.3 - 2024-05-21
 
 * Fix bugs in examples in README
