@@ -1,7 +1,7 @@
 from live_cells import mutable, batch, batched, computed
 from live_cells.stateful_cell import GlobalStateMap
 
-from .util import observe, CountTestObserver, ValueTestObserver
+from util import observe, CountTestObserver, ValueTestObserver
 
 def test_initial_value():
     """Test that the initial value of a mutable cell is the value given in constructor."""

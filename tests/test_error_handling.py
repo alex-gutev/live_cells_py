@@ -1,7 +1,7 @@
 import pytest
 
 from live_cells import value, mutable, computed
-from .util import ValueTestObserver, observe, MockException
+from util import ValueTestObserver, observe, MockException
 
 class TestErrorHandlingExtension:
     """Tests error handling cell extension methods."""

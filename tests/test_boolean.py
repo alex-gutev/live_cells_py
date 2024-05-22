@@ -2,7 +2,7 @@ import pytest
 
 from live_cells import value, mutable
 
-from .util import ValueTestObserver, observe
+from util import ValueTestObserver, observe
 
 class TestBooleanExtension:
     """Tests extension functions on boolean cells."""

@@ -1,5 +1,5 @@
 from live_cells import watch, mutable, batch, computed
-from .util import LifecycleCounter, LifecycleTestCell, ValueTestObserver, observe
+from util import LifecycleCounter, LifecycleTestCell, ValueTestObserver, observe
 
 class WatchTracker:
     def __init__(self):

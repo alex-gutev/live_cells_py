@@ -1,7 +1,7 @@
 import pytest
 
 from live_cells import value, mutable, computed, none
-from .util import (
+from util import (
     observe,
     CountTestObserver, ValueTestObserver,
     MockException,
