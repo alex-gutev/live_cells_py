@@ -1,3 +1,9 @@
+# 0.1.5 - 2024-06-24
+
+* Fix issue with scheduled watch function:
+  
+  Incorrect values were being read for referenced argument cells.
+
 # 0.1.4 - 2024-05-22
 
 * Fix issue with unit tests being installed as `tests` package.

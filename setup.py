@@ -6,7 +6,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='live-cells-py',
-    version='0.1.4',
+    version='0.1.5',
     author='Alexander Gutev',
     author_email='alex.gutev@gmail.com',
     description="A reactive programming library for Python ported from Live Cells for Dart",
