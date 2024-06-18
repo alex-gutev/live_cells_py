@@ -1,6 +1,6 @@
 import logging
 
-from .tracking import ArgumentTracker
+from .tracking import ArgumentTracker, without_tracker
 from .exceptions import StopComputeException
 from .maybe import Maybe
 
@@ -112,7 +112,7 @@ class CellWatchObserver:
     def schedule_call(self):
         """Schedule a call to the watch function callback, using ``self.schedule``."""
 
-        arg_values = {arg: Maybe.wrap(arg) for arg in self.arguments}
+        arg_values = {arg: Maybe.wrap(without_tracker(lambda: arg.value)) for arg in self.arguments}
 
         def bind_args(arg):
             if arg in arg_values:
