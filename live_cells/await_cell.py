@@ -3,6 +3,7 @@ from .observer_state import ObserverCellState
 from .exceptions import UninitializedCellError, PendingAsyncValueError
 from .extension import cell_extension
 from .async_state import AsyncCellState
+from .maybe import Maybe
 
 class AwaitCell(StatefulCell):
     """A cell that *awaits* a coroutine held in the argument cell.
@@ -52,6 +53,7 @@ class AwaitCellState(AsyncCellState, ObserverCellState):
         )
 
         self.arg = cell.arg
+        self.last_only = True
 
     def on_update(self, did_change):
         if did_change:

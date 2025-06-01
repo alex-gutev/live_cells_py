@@ -51,7 +51,7 @@ class AsyncCellState:
     def value(self):
         return self._awaited_value.unwrap()
 
-    def post_update():
+    def post_update(self):
         super().post_update()
 
         if self.last_only and self._task is not None:
