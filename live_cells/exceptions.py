@@ -16,3 +16,15 @@ class StopComputeException(Exception):
 
         super().__init__("StopComputeException() raised. If you're seeing this you most likely"
                          ' used none() outside a cell value computation function.')
+
+class UninitializedCellError(Exception):
+    """Exception raised when accessing the value of a cell before it is initialized."""
+
+    def __init__(self):
+        super().__init__('The value of a cell was referenced before it was initialized.')
+
+class PendingAsyncValueError(Exception):
+    """Exception raised when accessing the value of an async cell before the coroutine has completed."""
+
+    def __init__(self):
+        super().__init__('The value of an async cell was referenced before the async task has completed.')
