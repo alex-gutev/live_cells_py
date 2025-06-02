@@ -1,5 +1,5 @@
 import asyncio
-from asyncio import Future, CancelledError
+from asyncio import Future
 
 from .observer_state import ObserverCellState
 from .exceptions import PendingAsyncValueError
@@ -69,9 +69,8 @@ class AsyncCellState:
         )
 
     async def wait_future(self, task, future_value):
-        # TODO: Handle cancellation of previous task
         if task is not None:
-            await task
+            await asyncio.shield(task)
 
         self._set_value(await future_value)
 
