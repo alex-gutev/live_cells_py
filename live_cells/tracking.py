@@ -1,4 +1,4 @@
-import threading
+from contextvars import ContextVar
 
 class ArgumentTracker:
     """Context manager that installs an argument tracker for a given context.
@@ -32,8 +32,7 @@ class ArgumentTracker:
     """
 
     ## Function tracking argument cells
-    _data = threading.local()
-    _data.track = None
+    _tracker = ContextVar('argument_tracker', default=None)
 
     @classmethod
     def track(cls, arg):
@@ -44,33 +43,25 @@ class ArgumentTracker:
 
         """
 
-        tracker = cls._tracker
+        tracker = cls._tracker.get()
 
         if tracker is not None:
             return tracker(arg)
 
         return arg.value
 
-    @classmethod
-    @property
-    def _tracker(cls):
-        """The argument cell tracker callback currently in effect."""
-
-        return cls._data.track if hasattr(cls._data, 'track') else None
-
     def __init__(self, tracker, override=False):
         def track_fn(cell):
             tracker(cell)
             return cell.value
 
-        self._tracker = tracker if (override or tracker is None) else track_fn
+        self._track_fn = tracker if (override or tracker is None) else track_fn
 
     def __enter__(self):
-        self._previous = ArgumentTracker._tracker
-        ArgumentTracker._data.track = self._tracker
+        self._token = ArgumentTracker._tracker.set(self._track_fn)
 
     def __exit__(self, exception_type, exception_value, exception_traceback):
-        ArgumentTracker._data.track = self._previous
+        ArgumentTracker._tracker.reset(self._token)
 
 def with_tracker(tracker):
     """Install a cell dependency `tracker` to be in effect within the decorated function.
