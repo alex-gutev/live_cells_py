@@ -1,3 +1,5 @@
+import asyncio
+
 from .stateful_cell import StatefulCell
 from .compute_state import ComputeCellState
 from .tracking import without_tracker, ArgumentTracker
@@ -43,6 +45,12 @@ class DynamicComputeCell(StatefulCell):
         return state.value
 
     def create_state(self):
+        if asyncio.iscoroutinefunction(self._compute):
+            if self._changes_only:
+                return AsyncDynamicComputeChangesOnlyCellState(self, self.key)
+
+            return AsyncDynamicComputeCellState(self, self.key)
+
         if self._changes_only:
             return DynamicComputeChangesOnlyCellState(self, self.key)
 
@@ -78,3 +86,20 @@ class DynamicComputeChangesOnlyCellState(ChangesOnlyState, DynamicComputeCellSta
     """
 
     pass
+
+
+## Async Computed Cells
+
+class AsyncDynamicComputeCellState(DynamicComputeCellState):
+    """Variant of DynamicComputeCellState that supports async compute functions."""
+
+    async def compute(self):
+        with ArgumentTracker(self.track_argument):
+            return await self.cell._compute()
+
+class AsyncDynamicComputeChangesOnlyCellState(DynamicComputeChangesOnlyCellState):
+    """Variant of DynamicComputeChangesOnlyCellState that supports async compute functions."""
+
+    async def compute(self):
+        with ArgumentTracker(self.track_argument):
+            return await self.cell._compute()
