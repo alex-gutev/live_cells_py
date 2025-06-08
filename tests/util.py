@@ -1,7 +1,9 @@
-## Utilities used for testing
+import asyncio, pytest
 
+from asyncio import Future
 from contextlib import contextmanager
 
+from live_cells import PendingAsyncValueError
 from live_cells.stateful_cell import StatefulCell, CellState
 
 class CountTestObserver:
@@ -216,7 +218,7 @@ async def delayed(delay, value):
     await asyncio.sleep(delay)
     return value
 
-async def is_pending(cell):
+def is_pending(cell):
     """Assert that the value of an async cell is still pending.
 
     This function checks that accessing the value of ``cell`` raises a
