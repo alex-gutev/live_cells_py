@@ -1,4 +1,4 @@
-import pytest
+import pytest, async_solipsism
 
 from live_cells import watch
 
@@ -21,3 +21,7 @@ def test_watch():
 
     for watcher in watchers:
         watcher.stop()
+
+@pytest.fixture
+def event_loop_policy():
+    return async_solipsism.EventLoopPolicy()

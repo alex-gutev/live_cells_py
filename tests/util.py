@@ -169,3 +169,63 @@ def observe(cell, observer=CountTestObserver()):
 
     finally:
         cell.remove_observer(observer)
+
+
+## Async Test Utils
+
+def future_value(value):
+    """Create a coroutine that completes with a ``value``.
+
+    :param value: The value to complete with
+
+    :returns: A coroutine
+
+    """
+
+    f = Future()
+    f.set_result(value)
+
+    return f
+
+def future_error(error):
+    """Create a coroutine that completes with an exception.
+
+    :param error: The exception to throw in the coroutine.
+
+    :returns: A coroutine
+
+    """
+
+    f = Future()
+    f.set_exception(error)
+
+    return f
+
+async def delayed(delay, value):
+    """Create a coroutine that completes with a ``value`` after a ``delay``.
+
+    :param value: The value to complete with
+
+    :param delay: The delay in seconds
+    :type delay: int
+
+    :returns: A coroutine
+
+    """
+
+    await asyncio.sleep(delay)
+    return value
+
+async def is_pending(cell):
+    """Assert that the value of an async cell is still pending.
+
+    This function checks that accessing the value of ``cell`` raises a
+    ``PendingAsyncValueError``
+
+    :param cell: The cell
+    :type cell: Cell
+
+    """
+
+    with pytest.raises(PendingAsyncValueError):
+        cell.value
