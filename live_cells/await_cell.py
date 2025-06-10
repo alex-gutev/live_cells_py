@@ -27,8 +27,6 @@ class AwaitCell(StatefulCell):
 
     """
 
-    # TODO: Create a key that uniquely identifies the async cell
-
     def __init__(self, arg, key=None):
         super().__init__(key=key)
 
