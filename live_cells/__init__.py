@@ -7,7 +7,7 @@ from .exceptions import StopComputeException, PendingAsyncValueError
 
 from . import numeric, boolean, error_handling, peek_cell, await_cell
 
-from .await_cell import awaited
+from .waited import waited, wait
 
 __all__ = [
     'Cell',
@@ -24,5 +24,8 @@ __all__ = [
     'watch',
 
     'StopComputeException'
-    'PendingAsyncValueError'
+    'PendingAsyncValueError',
+
+    'waited',
+    'wait'
 ]
