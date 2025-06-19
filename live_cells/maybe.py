@@ -67,11 +67,11 @@ class Maybe:
             return cls(error = e)
 
     @classmethod
-    async def wrap_async(cls, compute):
-        """Create a ``Maybe`` that holds the result of a coroutine.
+    def wrap_async(cls, compute):
+        """Create a coroutine that returns the result of ``compute()`` in a ``Maybe``.
 
-        If the coroutine completes with a value, the returned
-        ``Maybe`` holds the value.
+        If the coroutine returned by ``compute()`` completes with a
+        value, the returned ``Maybe`` holds the value.
 
         If the coroutine raises an exception, the returned ``Maybe``
         holds the exception.
@@ -79,16 +79,23 @@ class Maybe:
         :param compute: A Function that should return a coroutine when
                         it is called (with no arguments).
 
-        :returns: A Maybe holding the result of the coroutine
-        :rtype: Maybe
+        :returns: A coroutine that returns the result of calling
+                  ``compute()`` in a ``Maybe``
 
         """
 
+        async def async_maybe(coro):
+            try:
+                return cls(value=await coro)
+
+            except Exception as e:
+                return cls(error=e)
+
         try:
-            return cls(value = await compute())
+            return async_maybe(compute())
 
         except Exception as e:
-            return cls(error = e)
+            return cls(error=e)
 
     def unwrap(self):
         """Return the value or raise the exception held in this Maybe.
