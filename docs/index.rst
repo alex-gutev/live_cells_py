@@ -21,6 +21,7 @@ To install Live Cells Python run the following command:
 
    basics/cells.rst
    basics/cell-expressions.rst
+   basics/asyncio.rst
    basics/pitfalls.rst
 	     
    modules.rst
