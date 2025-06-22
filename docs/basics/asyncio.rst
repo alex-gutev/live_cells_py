@@ -120,12 +120,12 @@ computation function is not a coroutine. Instead, it retrieves the
 result of the *awaitable* held in ``n`` through a *wait cell* created
 with ``waited``.
 
-.. important::
+.. attention::
 
-   A *wait cell* must have at least one observer to wait for
-   *awaitables* held in the *asynchronous cells*. If the *wait cell*
-   has no observers, it neither tracks the completion of the
-   *awaitables* in the *asynchronous cell* nor updates its own value.
+   A *wait cell* must have at least one observer in order to wait for
+   *asynchronous cells*. If the *wait cell* has no observers, it
+   neither tracks the completion of the *awaitables* in the
+   *asynchronous cell* nor updates its own value.
 
 ``waited`` can be used on any cell that holds an awaitable, regardless
 of whether it's a constant, mutable or computed cell. If the awaitable
@@ -273,7 +273,7 @@ last *awaitable* to complete.
 If ``queue`` is ``True`` the *wait cell* waits for all *awaitables* to
 complete.
 
-.. important::
+.. attention::
 
    ``queue=True`` only has an effect if ``reset=False`` is also given.
 
@@ -393,9 +393,9 @@ held in ``b``, simultaneously.
 		   
       x,y = lc.wait(a, b, reset=False)
 
-~~~~~~~~~~~~~~~~
-Avoding Glitches
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+Preventing Glitches
+~~~~~~~~~~~~~~~~~~~
       
 This form should be used as opposed to multiple individual :any:`wait`
 calls, since the latter may result in glitches if the *asynchronous*
