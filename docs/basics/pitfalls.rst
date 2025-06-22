@@ -8,7 +8,7 @@ go through this page carefully before using this library.
 Threading
 =========
 
-Cells are not thread safe and their values should only be read,
+Cells are not thread safe and their values should only be read and
 changed from a single thread. All interactions with cells should be
 designated to a single thread, which serves as the "main" thread.
 
@@ -17,7 +17,7 @@ libraries such as `gevent <https://www.gevent.org/>`_ and `eventlet
 <https://eventlet.readthedocs.io>`_. *Green threads* are lightweight
 threads, with multiple green threads running on a single OS thread. In
 general green threading libraries work by *monkey-patching* functions
-which perform blocking IO and replacing them with asynchronous
+that perform blocking IO and replacing them with asynchronous
 variants. When a "blocking" function is called in a green thread, the
 thread yields execution to another green thread until the blocking
 operation completes.
@@ -29,8 +29,8 @@ not be interrupted. To avoid this you should adhere to the following rules:
 
 * **Do not** call blocking IO functions within computed cells.
 * **Do not** call blocking IO functions in a context managed by :any:`live_cells.batch`.
-* Blocking IO functions may only be called within a watch functions
-  which are scheduled to run on a new green thread.
+* Blocking IO functions may only be called within watch functions
+  that are scheduled to run on a new green thread.
 
 Regarding the last point, if you must call a blocking IO function
 inside a watch function, you should provide a ``schedule`` function
