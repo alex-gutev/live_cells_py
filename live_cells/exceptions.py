@@ -24,7 +24,7 @@ class UninitializedCellError(Exception):
         super().__init__('The value of a cell was referenced before it was initialized.')
 
 class PendingAsyncValueError(Exception):
-    """Exception raised when accessing the value of an async cell before the coroutine has completed."""
+    """Exception raised when accessing the value of a *wait cell* before the *awaitable* has completed."""
 
     def __init__(self):
-        super().__init__('The value of an async cell was referenced before the async task has completed.')
+        super().__init__('The value of a wait cell was referenced before the awaitable has completed.')

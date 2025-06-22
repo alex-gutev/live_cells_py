@@ -23,7 +23,7 @@ __all__ = [
     'CellWatcher',
     'watch',
 
-    'StopComputeException'
+    'StopComputeException',
     'PendingAsyncValueError',
 
     'waited',
