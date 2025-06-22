@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -15,14 +15,14 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=2709fde1"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=e031e9a9"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="live_cells" href="../modules.html" />
-    <link rel="prev" title="Cell Expressions" href="cell-expressions.html" /> 
+    <link rel="prev" title="Integration with Asyncio" href="asyncio.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,6 +48,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="cells.html">Cells</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cell-expressions.html">Cell Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asyncio.html">Integration with Asyncio</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Pitfalls</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#threading">Threading</a></li>
 </ul>
@@ -80,19 +81,19 @@
            <div itemprop="articleBody">
              
   <section id="pitfalls">
-<h1>Pitfalls<a class="headerlink" href="#pitfalls" title="Link to this heading"></a></h1>
+<h1>Pitfalls<a class="headerlink" href="#pitfalls" title="Permalink to this heading"></a></h1>
 <p>This page documents some common pitfalls when using Live Cells. Please
 go through this page carefully before using this library.</p>
 <section id="threading">
-<h2>Threading<a class="headerlink" href="#threading" title="Link to this heading"></a></h2>
-<p>Cells are not thread safe and their values should only be read,
+<h2>Threading<a class="headerlink" href="#threading" title="Permalink to this heading"></a></h2>
+<p>Cells are not thread safe and their values should only be read and
 changed from a single thread. All interactions with cells should be
 designated to a single thread, which serves as the “main” thread.</p>
 <p>Care needs to be taken when using Live Cells with <em>green threading</em>
 libraries such as <a class="reference external" href="https://www.gevent.org/">gevent</a> and <a class="reference external" href="https://eventlet.readthedocs.io">eventlet</a>. <em>Green threads</em> are lightweight
 threads, with multiple green threads running on a single OS thread. In
 general green threading libraries work by <em>monkey-patching</em> functions
-which perform blocking IO and replacing them with asynchronous
+that perform blocking IO and replacing them with asynchronous
 variants. When a “blocking” function is called in a green thread, the
 thread yields execution to another green thread until the blocking
 operation completes.</p>
@@ -103,8 +104,8 @@ not be interrupted. To avoid this you should adhere to the following rules:</p>
 <ul class="simple">
 <li><p><strong>Do not</strong> call blocking IO functions within computed cells.</p></li>
 <li><p><strong>Do not</strong> call blocking IO functions in a context managed by <a class="reference internal" href="../live_cells.html#live_cells.batch" title="live_cells.batch"><code class="xref any py py-func docutils literal notranslate"><span class="pre">live_cells.batch</span></code></a>.</p></li>
-<li><p>Blocking IO functions may only be called within a watch functions
-which are scheduled to run on a new green thread.</p></li>
+<li><p>Blocking IO functions may only be called within watch functions
+that are scheduled to run on a new green thread.</p></li>
 </ul>
 <p>Regarding the last point, if you must call a blocking IO function
 inside a watch function, you should provide a <code class="docutils literal notranslate"><span class="pre">schedule</span></code> function
@@ -144,7 +145,7 @@ it is set to <code class="docutils literal notranslate"><span class="pre">2</spa
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cell-expressions.html" class="btn btn-neutral float-left" title="Cell Expressions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="asyncio.html" class="btn btn-neutral float-left" title="Integration with Asyncio" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../modules.html" class="btn btn-neutral float-right" title="live_cells" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

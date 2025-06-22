@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -15,9 +15,9 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=2709fde1"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=e031e9a9"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -48,6 +48,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="basics/cells.html">Cells</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics/cell-expressions.html">Cell Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basics/asyncio.html">Integration with Asyncio</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basics/pitfalls.html">Pitfalls</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">live_cells</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="live_cells.html">live_cells package</a></li>
@@ -80,7 +81,7 @@
            <div itemprop="articleBody">
              
   <section id="live-cells">
-<h1>live_cells<a class="headerlink" href="#live-cells" title="Link to this heading"></a></h1>
+<h1>live_cells<a class="headerlink" href="#live-cells" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="live_cells.html">live_cells package</a><ul>
@@ -96,12 +97,15 @@
 <li class="toctree-l4"><a class="reference internal" href="live_cells.html#live_cells.Cell.remove_observer"><code class="docutils literal notranslate"><span class="pre">Cell.remove_observer()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="live_cells.html#live_cells.Cell.select"><code class="docutils literal notranslate"><span class="pre">Cell.select()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="live_cells.html#live_cells.Cell.value"><code class="docutils literal notranslate"><span class="pre">Cell.value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="live_cells.html#live_cells.Cell.wait"><code class="docutils literal notranslate"><span class="pre">Cell.wait()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="live_cells.html#live_cells.Cell.waited"><code class="docutils literal notranslate"><span class="pre">Cell.waited()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.CellWatcher"><code class="docutils literal notranslate"><span class="pre">CellWatcher</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="live_cells.html#live_cells.CellWatcher.stop"><code class="docutils literal notranslate"><span class="pre">CellWatcher.stop()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.PendingAsyncValueError"><code class="docutils literal notranslate"><span class="pre">PendingAsyncValueError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.StopComputeException"><code class="docutils literal notranslate"><span class="pre">StopComputeException</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.batch"><code class="docutils literal notranslate"><span class="pre">batch()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.batched"><code class="docutils literal notranslate"><span class="pre">batched()</span></code></a></li>
@@ -109,6 +113,8 @@
 <li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.mutable"><code class="docutils literal notranslate"><span class="pre">mutable()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.none"><code class="docutils literal notranslate"><span class="pre">none()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.value"><code class="docutils literal notranslate"><span class="pre">value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.wait"><code class="docutils literal notranslate"><span class="pre">wait()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.waited"><code class="docutils literal notranslate"><span class="pre">waited()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="live_cells.html#live_cells.watch"><code class="docutils literal notranslate"><span class="pre">watch()</span></code></a></li>
 </ul>
 </li>
