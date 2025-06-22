@@ -1,3 +1,10 @@
+# 0.2.0 - 2025-06-25
+
+New features:
+
+* `waited()` and `wait()` functions/methods for creating cells that
+  observe the result of *awaitables*.
+
 # 0.1.5 - 2024-06-24
 
 * Fix issue with scheduled watch function:
