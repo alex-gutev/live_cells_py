@@ -24,7 +24,7 @@ define a computed cell with an ``async`` computation function.
 
    n = lc.mutable(coro1(1))
 
-   # An asynchronous cell
+   # An asynchronous computed cell
    @lc.computed
    async def next():
        return await n() + 1
