@@ -11,25 +11,25 @@ class WaitedCellKey(ValueKey):
 
 @cell_extension
 def waited(self, *cells, **kwargs):
-    """Create an *await cell* that *awaits* the coroutine held in this cell.
+    """Create a *wait cell* that *awaits* one or more *asynchronous cells*.
 
     The value of the returned cell is the completed value of the
-    coroutine held in this cell. If the coroutine, raises an
-    exception, then accessing the value of the returned cell raises
-    the same exception.
+    *awaitable* held in ``self``. If the *awaitable*, or the cell
+    ``self`` itself, raises an exception then accessing the value of
+    the returned cell raises the same exception.
 
     .. important::
 
        If the value of the returned cell is accessed before the
-       coroutine held in this cell has completed, a
-       ``PendingAsyncValueError`` exception is raised.
+       coroutine held in ``self`` has completed, a
+       :any:`PendingAsyncValueError` exception is raised.
 
 
-    If multiple arguments are given, a cell is returned that awaits the
-    coroutine held in ``self`` and each cell in ``cells``. The value
+    If multiple arguments are given, a cell is returned that *awaits* the
+    *awaitables* held in ``self`` and each cell in ``cells``. The value
     of the cell is a list holding the completed value of ``self``
     followed by the completed value of each cell in ``cells``. This is
-    equivalent to the following.
+    equivalent to the following:
 
     .. code-block:: python
 
@@ -52,26 +52,28 @@ def waited(self, *cells, **kwargs):
        def sum():
            return a.waited()() + b.waited()()
 
-    becomes apparent when an update to the argument cells is
-    triggered by a common ancestor of both ``a`` and ``b``. With a
-    single call to ``waited``, the value of the ``sum`` cell is
-    recomputed only once when both the coroutines held in ``a`` and
-    ``b`` have completed. In the second example, the value of ``sum``
-    is recomputed once when the coroutine held in ``a`` has completed
-    and a second time when the coroutine held in ``b`` has completed.
+    becomes apparent when an update to the *asynchronous cells* is
+    triggered by a common ancestor of the cells. With a single call to
+    ``waited``, the value of the ``sum`` cell is recomputed only once
+    when both the *awaitables* held in ``a`` and ``b`` have
+    completed. In the second example, the value of ``sum`` is
+    recomputed once when the *awaitable* held in ``a`` has completed
+    and a second time when the *awaitable* held in ``b`` has
+    completed.
 
     This function also accepts a number of keyword arguments that
     modify the behaviour of the cell.
 
     The ``reset`` keyword argument controls whether the value of the
-    cell is reset when a new coroutine is assigned to the argument
-    cell(s).
+    cell is reset when the values of the asynchronous cells
+    changes.
 
-    By default this is ``True``, which means that assigning a new
-    coroutine to the argument cell, resets the value of the returned
-    await cell. Accessing the value of the returned cell at this point
-    results in a ``PendingAsyncValueError`` exception being raised,
-    until the coroutine has completed with a value or an error.
+    By default this is ``True``, which means that when the values of
+    the asynchronous cells changes the value of the returned *wait
+    cell* is reset. Accessing the value of the returned cell at this
+    point results in a :any:`PendingAsyncValueError` exception being
+    raised, until the *awaitables* held in the asynchronous cells have
+    completed.
 
     .. code-block:: python
 
@@ -98,19 +100,20 @@ def waited(self, *cells, **kwargs):
        # The value of `w2` is still 1
 
 
-    The ``queue`` keyword argument controls what happens when a new
-    coroutine is assigned to the argument cell(s), before the previous
-    coroutine has completed.
+    The ``queue`` keyword argument controls what happens when the
+    values of the asynchronous cells change before the *awaitables*,
+    for which the *wait cell* is currently waiting, have completed.
 
-    If ``queue`` is True, when a new coroutine is assigned to the
-    argument cell, the await cell first waits for the previous
-    coroutine to complete, and only then waits for the new
-    coroutine. The value of the await cell is updated in the order in
-    which the coroutines are assigned to the argument cell and not
+    If ``queue`` is True, when the values of the asynchronous cells
+    change, the *wait cell* first waits for the previous *awaitables*
+    to complete, and only then waits for the new *awaitables*. The
+    value of the *wait cell* is updated in the order in which the
+    *awaitables* were assigned to the asynchronous cell and not
     necessarily in the order of completion.
 
-    If ``queue`` is False, the await cell only waits for the last
-    coroutine that was assigned to the argument cell.
+    If ``queue`` is False, the default, the *wait cell* only waits for
+    the last *awaitable* and ignores previous *awaitables* that have
+    not completed.
 
     The following example illustrates the difference:
 
@@ -144,7 +147,7 @@ def waited(self, *cells, **kwargs):
     For ``w1`` two lines are printed: ``W1 = 1`` and ``W1 = 2``, while
     for ``w2`` only a single line ``W2 = 2`` is printed.
 
-    .. note::
+    .. attention::
 
        The ``queue`` argument has no effect if ``reset`` is
        True.
@@ -155,20 +158,21 @@ def waited(self, *cells, **kwargs):
     The following keyword arguments are accepted:
 
     :param reset: If True (the default), the value of the cell is
-                  reset, whenever a new coroutine is assigned to an
-                  argument cell. Otherwise the last completed value
-                  (or exception) is retained until the new coroutine
-                  has completed.
+                  reset, whenever the values of the asynchronous cells
+                  change. Otherwise the last completed value (or
+                  exception) is retained until the new *awaitables* have
+                  completed.
 
     :type reset: bool
 
-    :param queue: If true, the returned cell waits for every
-                  coroutine, that is assigned to the argument cell(s),
-                  to complete. If false, the cell only waits for the
-                  last coroutine that was assigned to the argument
-                  cell(s).
+    :param queue: If true, the returned cell waits for all
+                  `awaitables` that were assigned to the asynchronous
+                  cell(s) to complete. If false, the cell only waits
+                  for the last *awaitables* that were assigned.
 
-    :returns: The await cell
+    :type queue: bool
+
+    :returns: The *wait cell*
     :rtype: Cell
 
     """
@@ -205,7 +209,7 @@ def waited(self, *cells, **kwargs):
 
 @cell_extension
 def wait(self, *cells, **kwargs):
-    """Creates an *await cell*, as if by ``waited`` and accesses its value.
+    """Create a *wait cell*, as if by :any:`waited` and access its value.
 
     Calling this function is equivalent to:
 
@@ -214,9 +218,9 @@ def wait(self, *cells, **kwargs):
        waited(self, *cells, **kwargs)()
 
     This function accepts the same positional and keyword arguments as
-    ``waited``.
+    :any:`waited`.
 
-    :returns: The value of the ``waited`` cell.
+    :returns: The value of the *wait cell*
 
     """
 
