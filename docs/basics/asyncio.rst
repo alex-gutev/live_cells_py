@@ -5,7 +5,7 @@ There are a number of tools for integrating cells with asyncio
 awaitables and coroutines.
 
 ===================
-Awaitables in Cells
+Asynchronous Cells
 ===================
 
 An *asynchronous cell* is a cell with an *awaitable* value. To define a
