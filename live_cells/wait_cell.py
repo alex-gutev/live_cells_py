@@ -10,31 +10,31 @@ from .maybe import Maybe
 from .keys import ValueKey
 
 class WaitCell(StatefulCell):
-    """A cell that *awaits* a coroutine held in the argument cell.
+    """A cell that *awaits* an *awaitable* held in the argument cell.
 
-    The value of this cell is the completed value of the coroutine
-    held in the argument cell. If the coroutine, raises an exception,
-    then accessing this cell raises the same exception.
+    The value of this cell is the completed value of the *awaitable*
+    held in the argument cell. If the *awaitable*, raises an
+    exception, then accessing this cell raises the same exception.
 
     .. important::
 
-       If the value of this cell is accessed before the coroutine held
-       in the argument cell has completed, a
-       ``PendingAsyncValueError`` exception is raised.
+       If the value of this cell is accessed before the *awaitable*
+       held in the argument cell has completed, a
+       :any:`PendingAsyncValueError` exception is raised.
 
     .. note::
 
        The difference between this cell and ``AwaitCell`` is that the
-       value of this cell is not reset when a new coroutine is
-       assigned to the argument cell. Instead, the completed value of
-       the last coroutine is kept until the new coroutine completes.
+       value of this cell is not reset when the value of the argument
+       cell changes. Instead, the completed value of the last
+       *awaitable* is kept until the new *awaitable* completes.
 
-    :param arg: The argument cell, which holds a coroutine
+    :param arg: The argument cell, which holds an *awaitable*
     :type arg: Cell
 
-    :param last_only: If True, only the last coroutine assigned to the
-                      argument cell is awaited. If False, the cell
-                      waits for every coroutine assigned to the
+    :param last_only: If True, only the last *awaitable* assigned to
+                      the argument cell is awaited. If False, the cell
+                      waits for every *awaitable* assigned to the
                       argument cell to complete.
 
     :type last_only: bool
@@ -77,13 +77,13 @@ class WaitCellState(AsyncCellState, ObserverCellState):
         self.last_only = cell.last_only
 
     def on_will_update(self):
-        # Prevent observers from being notified before coroutine
+        # Prevent observers from being notified before awaitable
         # completion
 
         pass
 
     def on_update(self, did_change):
-        # Prevent observers from being notified before coroutine
+        # Prevent observers from being notified before awaitable
         # completion
 
         pass

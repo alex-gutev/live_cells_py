@@ -6,27 +6,27 @@ from .exceptions import PendingAsyncValueError
 from .maybe import Maybe
 
 class AsyncCellState:
-    """Augments ``CellState`` with functionality for waiting for coroutines.
+    """Augments ``CellState`` with functionality for waiting for *awaitables*.
 
     This mixin provides functionality for creating a ``CellState``
-    that updates its value when the coroutine held in the argument
+    that updates its value when the *awaitable* held in the argument
     cell completes.
 
     The behaviour of this class is influenced by the value of the
     ``last_only`` property.
 
     If ``last_only`` is false, the state waits for the completion of
-    every coroutine that is held in the argument cell. The values
+    every *awaitable* that is held in the argument cell. The values
     assigned to the cell associated with this state, are the completed
-    values of the coroutines held in the argument cell. The
-    assignments happen in the order, in which the coroutines are
+    values of the *awaitables* held in the argument cell. The
+    assignments happen in the order, in which the *awaitables* are
     assigned to the argument cell and not necessarily in the order of
-    completion of the coroutines.
+    completion of the *awaitables*.
 
     If ``last_only`` is true and the argument cell is assigned a new
-    coroutine before the previous coroutine completes, the state only
-    waits for the new coroutine to complete, and does not emit an
-    update for the previous coroutine.
+    *awaitable* before the previous *awaitable* completes, the state only
+    waits for the new *awaitable* to complete, and does not emit an
+    update for the previous *awaitable*.
 
     """
 

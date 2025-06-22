@@ -5,19 +5,19 @@ from .async_state import AsyncCellState
 from .maybe import Maybe
 
 class AwaitCell(StatefulCell):
-    """A cell that *awaits* a coroutine held in the argument cell.
+    """A cell that *awaits* an *awaitable* held in the argument cell.
 
-    The value of this cell is the completed value of the coroutine
-    held in the argument cell. If the coroutine, raises an exception,
+    The value of this cell is the completed value of the *awaitable*
+    held in the argument cell. If the *awaitable*, raises an exception,
     then accessing this cell raises the same exception.
 
     .. important::
 
-       If the value of this cell is accessed before the coroutine held
-       in the argument cell has completed, a
-       ``PendingAsyncValueError`` exception is raised.
+       If the value of this cell is accessed before the *awaitable*
+       held in the cell has completed, a :any:`PendingAsyncValueError`
+       exception is raised.
 
-    :param arg: The argument cell, which holds a coroutine
+    :param arg: The argument cell, which holds an *awaitable*
     :type arg: Cell
 
     :param key: Key identifying the cell
