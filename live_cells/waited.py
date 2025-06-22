@@ -185,13 +185,10 @@ def waited(self, *cells, **kwargs):
     if cells:
         @computed
         def gathered():
-            async def gather(coros):
-                return await asyncio.gather(*coros)
-
-            return gather([
+            return asyncio.gather(
                 self(),
                 *(c() for c in cells)
-            ])
+            )
 
         arg = gathered
 
