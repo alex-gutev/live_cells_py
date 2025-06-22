@@ -201,7 +201,7 @@ class TestWaitCell:
 
             assert observer.values == [1, 10]
 
-    def test_compares_eq_same_cells(self):
+    async def test_compares_eq_same_cells(self):
         """Test that cells compare equal when given the same argument cell."""
 
         f = mutable(future_value(1))
@@ -212,7 +212,7 @@ class TestWaitCell:
         assert w1 == w2
         assert hash(w1) == hash(w2)
 
-    def test_compares_neq_different_cells(self):
+    async def test_compares_neq_different_cells(self):
         """Test that cells compare not equal when given different argument cells."""
 
         f1 = mutable(future_value(1))
@@ -405,7 +405,7 @@ class TestMultiWaitCell:
 
             assert observer.values == [[1, 2], [10, 15]]
 
-    def test_compares_eq_same_cells(self):
+    async def test_compares_eq_same_cells(self):
         """Test that cells compare equal when given the same argument cells."""
 
         f1 = mutable(future_value(1))
@@ -417,7 +417,7 @@ class TestMultiWaitCell:
         assert w1 == w2
         assert hash(w1) == hash(w2)
 
-    def test_compares_neq_difference_cells(self):
+    async def test_compares_neq_difference_cells(self):
         """Test that cells compare not equal when given different argument cells."""
 
         f1 = mutable(future_value(1))
@@ -608,7 +608,7 @@ class TestWaitNoResetCell:
 
             assert observer.values == [1, 10]
 
-    def test_compares_eq_same_cells(self):
+    async def test_compares_eq_same_cells(self):
         """Test that cells compare equal when given the same argument cell."""
 
         f = mutable(future_value(1))
@@ -619,7 +619,7 @@ class TestWaitNoResetCell:
         assert w1 == w2
         assert hash(w1) == hash(w2)
 
-    def test_compares_neq_different_cells(self):
+    async def test_compares_neq_different_cells(self):
         """Test that cells compare not equal when given different argument cells."""
 
         f1 = mutable(future_value(1))
@@ -631,7 +631,7 @@ class TestWaitNoResetCell:
         assert w1 != w2
         assert w1 == w1
 
-    def test_compares_neq_different_kwargs(self):
+    async def test_compares_neq_different_kwargs(self):
         """Test that cells compare not equal when given different keyword arguments."""
 
         f = mutable(future_value(1))
@@ -832,7 +832,7 @@ class TestMultiWaitNoResetCell:
 
             assert observer.values == [[1, 2], [10, 15]]
 
-    def test_compares_eq_same_cells(self):
+    async def test_compares_eq_same_cells(self):
         """Test that cells compare equal when given the same argument cells."""
 
         f1 = mutable(future_value(1))
@@ -844,7 +844,7 @@ class TestMultiWaitNoResetCell:
         assert w1 == w2
         assert hash(w1) == hash(w2)
 
-    def test_compares_neq_difference_cells(self):
+    async def test_compares_neq_difference_cells(self):
         """Test that cells compare not equal when given different argument cells."""
 
         f1 = mutable(future_value(1))
@@ -860,7 +860,7 @@ class TestMultiWaitNoResetCell:
         assert w1 != w3
         assert w2 != w3
 
-    def test_compares_neq_different_kwargs(self):
+    async def test_compares_neq_different_kwargs(self):
         """Test that cells compare not equal when given different keyword arguments."""
 
         f1 = mutable(future_value(1))
@@ -1058,7 +1058,7 @@ class TestWaitQueueCell:
 
             assert observer.values == [1, 10]
 
-    def test_compares_eq_same_cells(self):
+    async def test_compares_eq_same_cells(self):
         """Test that cells compare equal when given the same argument cell."""
 
         f = mutable(future_value(1))
@@ -1069,7 +1069,7 @@ class TestWaitQueueCell:
         assert w1 == w2
         assert hash(w1) == hash(w2)
 
-    def test_compares_neq_different_cells(self):
+    async def test_compares_neq_different_cells(self):
         """Test that cells compare not equal when given different argument cells."""
 
         f1 = mutable(future_value(1))
@@ -1261,7 +1261,7 @@ class TestMultiWaitQueueCell:
 
             assert observer.values == [[1, 2], [10, 2], [10, 15]]
 
-    def test_compares_eq_same_cells(self):
+    async def test_compares_eq_same_cells(self):
         """Test that cells compare equal when given the same argument cells."""
 
         f1 = mutable(future_value(1))
@@ -1273,7 +1273,7 @@ class TestMultiWaitQueueCell:
         assert w1 == w2
         assert hash(w1) == hash(w2)
 
-    def test_compares_neq_difference_cells(self):
+    async def test_compares_neq_difference_cells(self):
         """Test that cells compare not equal when given different argument cells."""
 
         f1 = mutable(future_value(1))
